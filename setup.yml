@@ -1,0 +1,26 @@
+- hosts: all
+  sudo: yes
+  user: ubuntu
+  
+  tasks:
+
+  - name: Install NodeJS
+    apt: pkg=nodejs state=installed update_cache=yes
+
+  - name: Install npm
+    apt: pkg=npm state=installed update_cache=yes
+
+  - name: Install git
+    apt: pkg=git state=installed update_cache=yes
+
+  - name: Create Project folder
+    file: path=/home/production state=directory
+
+  - name: Create git bare folder
+    file: path=/home/production/prod.git state=directory
+
+  - name: Initialize git bare folder
+    shell: git init --bare /home/production/prod.git
+
+  - name: Create project file folder
+    file: path=/home/production/prodfiles state=directory

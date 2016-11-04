@@ -1,0 +1,33 @@
+{
+  "name": "nginx_deploy",
+  "version": "1.0.0",
+  "description": "Create VM instances on AWS and Digital Ocean and deploy nginx using Ansible",
+  "main": "createDOInstance.js",
+  "dependencies": {
+    "aws-sdk": "~2.6.1",
+    "needle": "~1.1.2",
+    "sleep": "~4.0.0",
+    "ssh-keygen": "~0.4.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.ncsu.edu/ssdharma/CSC791_HW1.git"
+  },
+  "keywords": [
+    "AWS",
+    "Digital",
+    "Ocean",
+    "nginx",
+    "Ansible",
+    "ansible",
+    "playbook",
+    "NodeJS",
+    "npm"
+  ],
+  "author": "ssdharma",
+  "license": "BSD-2-Clause"
+}
