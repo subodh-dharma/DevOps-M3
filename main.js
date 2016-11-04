@@ -4,11 +4,11 @@ var express = require('express')
 var fs = require('fs')
 var app = express()
 var exec = require('child_process').exec;
+var ip = require('ip');
 // REDIS - HOSTED-SHARED with JENKINS MACHINE
 var client = redis.createClient(6379, '54.146.135.5', {})
 
 ///////////// WEB ROUTES
-
 // Add hook to make it easier to get all visited URLS.
 var history = [];
 app.use(function(req, res, next) {
@@ -93,7 +93,7 @@ if (args.length == 0) {
     args = ["3000"];
 }
 var portNum = parseInt(args[0]);
-var server = app.listen(portNum, function() {
+var server = app.listen(portNum, ip.address(), function() {
 
     var host = server.address().address
     var port = server.address().port
