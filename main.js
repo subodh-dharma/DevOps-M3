@@ -5,6 +5,7 @@ var fs = require('fs')
 var app = express()
 var exec = require('child_process').exec;
 var ip = require('ip');
+var requestfreq = 0;
 // REDIS - HOSTED-SHARED with JENKINS MACHINE
 var client = redis.createClient(6379, '54.146.135.5', {})
 
@@ -15,7 +16,8 @@ app.use(function(req, res, next) {
     console.log(req.method, req.url);
 
     //console.log("URL :" + req.url);
-    history.push(req.originalUrl);
+    //history.push(req.originalUrl);
+    requestfreq++;
     client.lpush('queue', req.url);
 
 
@@ -101,7 +103,11 @@ var server = app.listen(portNum, ip.address(), function() {
     console.log('Example app listening at http://%s:%s', host, port)
 })
 
-
+//COUNTING per second requests
+setInterval(function(){
+	console.log("Request Frequency :"+ requestfreq);
+        requestfreq = 0;
+},1000);
 
 function teardown() {
     exec('forever stopall', function() {
@@ -113,3 +119,4 @@ function teardown() {
 process.on('exit', function() {
     teardown();
 });
+
