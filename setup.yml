@@ -12,15 +12,21 @@
 
   - name: Install git
     apt: pkg=git state=installed update_cache=yes
+  
+  - name: Resolving node and nodejs
+    shell: sudo ln -s /usr/bin/nodejs /usr/bin/node
+
+  - name: Install forever
+    shell: npm install forever -g
 
   - name: Create Project folder
     file: path=/home/production state=directory
 
-  - name: Create git bare folder
-    file: path=/home/production/prod.git state=directory
+  - name: Copying Server Software
+    git: repo=https://github.com/subodh-dharma/DevOps-M3.git dest=/home/production
 
-  - name: Initialize git bare folder
-    shell: git init --bare /home/production/prod.git
+  - name: Installing Server Software
+    shell: npm --prefix /home/production install
 
-  - name: Create project file folder
-    file: path=/home/production/prodfiles state=directory
+  - name: Starting Web Server
+    command: forever -w start /home/production/main.js
