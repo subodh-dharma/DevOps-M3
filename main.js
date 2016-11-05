@@ -18,9 +18,8 @@ app.use(function(req, res, next) {
     //console.log("URL :" + req.url);
     //history.push(req.originalUrl);
     requestfreq++;
+    client.set(ip.address(), requestfreq);
     client.lpush('queue', req.url);
-
-
     // ... INSERT HERE.
     app.get('/', function(req, res) {
         res.send('hello world')
@@ -104,10 +103,11 @@ var server = app.listen(portNum, ip.address(), function() {
 })
 
 //COUNTING per second requests
-setInterval(function(){
-	console.log("Request Frequency :"+ requestfreq);
-        requestfreq = 0;
-},1000);
+setInterval(function() {
+    console.log("Request Frequency :" + requestfreq);
+    requestfreq = 0;
+    client.set(ip.address(), requestfreq);
+}, 1000);
 
 function teardown() {
     exec('forever stopall', function() {
@@ -119,4 +119,3 @@ function teardown() {
 process.on('exit', function() {
     teardown();
 });
-
