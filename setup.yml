@@ -14,7 +14,7 @@
     apt: pkg=git state=installed update_cache=yes
   
   - name: Resolving node and nodejs
-    shell: sudo ln -s /usr/bin/nodejs /usr/bin/node
+    command: ln -s /usr/bin/nodejs /usr/bin/node creates=/usr/bin/node
 
   - name: Install forever
     shell: npm install forever -g
@@ -29,4 +29,4 @@
     shell: npm --prefix /home/production install
 
   - name: Starting Web Server
-    command: forever -w start /home/production/main.js
+    command: forever start /home/production/main.js
