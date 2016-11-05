@@ -94,7 +94,7 @@ if (args.length == 0) {
     args = ["3000"];
 }
 var portNum = parseInt(args[0]);
-var server = app.listen(portNum, ip.address(), function() {
+var server = app.listen(portNum, 'localhost', function() {
 
     var host = server.address().address
     var port = server.address().port
