@@ -3,7 +3,7 @@
   user: ubuntu
   pre_tasks:
   - name: Install python2
-    apt: pkg=python-simplejson state=installed update_cache=yes
+    raw: sudo apt-get -y install python-simplejson
   
   tasks:
 
