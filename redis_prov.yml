@@ -22,11 +22,26 @@
       url: http://download.redis.io/redis-stable.tar.gz
       dest: /tmp/redis-stable.tar.gz
 
+  - name: Remove prev redis directory
+    file: path=/tmp/redis-stable state=absent
+
   - name: Extract redis
-    unarchive: src=/tmp/redis-stable.tar.gz dest=/tmp/redis-stable
+    unarchive: src=/tmp/redis-stable.tar.gz dest=/tmp/ remote_src=yes creates=yes
 
   - name: Run makefile
-    shell: /tmp/redis-stable/make
+    shell: chdir=/tmp/redis-stable make
 
   - name: Run install binaries
-    shell: /tmp/redis-stable/make install
+    shell: chdir=/tmp/redis-stable make install
+
+  - name: Create configuration directory
+    file: path=/etc/redis state=directory
+
+  - name: Copy redis configuration file
+    template: src=redis.conf dest=/etc/redis/redis.conf
+
+  - name: Copy redis service
+    template: src=redis.service dest=/etc/systemd/system/redis.service
+
+  - name: Start redis service
+    service: name=redis state=restarted
