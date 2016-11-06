@@ -1,0 +1,32 @@
+- hosts: redis
+  sudo: yes
+  user: ubuntu
+  gather_facts: False
+  pre_tasks:
+  - name: Install python2
+    raw: sudo apt-get -y install python-simplejson
+
+  - name: Clear directory
+    raw: rm -rf /home/redis
+
+  tasks:
+
+  - name: Install build essentials
+    apt: pkg=build-essential state=installed update_cache=yes
+
+  - name: Install tcl
+    apt: pkg=tcl state=installed update_cache=yes
+
+  - name: Download redis source code
+    get_url:
+      url: http://download.redis.io/redis-stable.tar.gz
+      dest: /tmp/redis-stable.tar.gz
+
+  - name: Extract redis
+    unarchive: src=/tmp/redis-stable.tar.gz dest=/tmp/redis-stable
+
+  - name: Run makefile
+    make: chdir=/tmp/redis-stable
+
+  - name: Run install binaries
+    make: chdir=/tmp/redis-stable target=install
