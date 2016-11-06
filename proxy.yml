@@ -1,4 +1,4 @@
-- hosts: production
+- hosts: proxy
   sudo: yes
   user: ubuntu
   gather_facts: False
@@ -7,8 +7,8 @@
     raw: sudo apt-get -y install python-simplejson
 
   - name: Clear directory
-    raw: rm -rf /home/production
- 
+    raw: rm -rf /home/proxy
+
   tasks:
 
   - name: Install NodeJS
@@ -19,7 +19,7 @@
 
   - name: Install git
     apt: pkg=git state=installed update_cache=yes
-  
+
   - name: Resolving node and nodejs
     command: ln -s /usr/bin/nodejs /usr/bin/node creates=/usr/bin/node
 
@@ -27,22 +27,19 @@
     shell: npm install forever -g
 
   - name: Create Project folder
-    file: path=/home/production state=directory
+    file: path=/home/proxy state=directory
 
   - name: Copying Server Software
-    git: repo=https://github.com/subodh-dharma/DevOps-M3.git dest=/home/production
+    git: repo=https://github.com/subodh-dharma/DevOps-M3.git dest=/home/proxy
 
   - name: Installing Server Software
-    shell: npm --prefix /home/production install
-
-  - name: Clear Server data from Redis
-    raw: node /home/production/main clearRedis
+    shell: npm --prefix /home/proxy install
 
   - name: Stop all forever processes
     raw: forever stopall
 
   - name: Starting Web Server
-    command: forever start /home/production/main.js
+    command: forever start /home/proxy/proxy.js
 
   - name: Install nginx
     apt: pkg=nginx state=installed update_cache=yes
