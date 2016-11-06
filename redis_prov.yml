@@ -17,11 +17,10 @@
   - name: Install tcl
     apt: pkg=tcl state=installed update_cache=yes
 
-  - name: Download redis source code
-    get_url:
-      url: http://download.redis.io/redis-stable.tar.gz
-      dest: /tmp/redis-stable.tar.gz
+  - name: Install redis-server
+    apt: pkg=redis-server state=installed update_cache=yes
 
+<<<<<<< HEAD
   - name: Remove prev redis directory
     file: path=/tmp/redis-stable state=absent
 
@@ -36,12 +35,46 @@
 
   - name: Create configuration directory
     file: path=/etc/redis state=directory
+=======
+
+
+  # - name: Download redis source code
+  #   get_url:
+  #     url: http://download.redis.io/redis-stable.tar.gz
+  #     dest: /tmp/redis-stable.tar.gz
+
+  # - name: Remove prev redis directory
+  #   file: path=/tmp/redis-stable state=absent
+
+  # - name: Extract redis
+  #   unarchive: src=/tmp/redis-stable.tar.gz dest=/tmp/ remote_src=yes creates=yes
+
+  # - name: Run makefile
+  #   shell: chdir=/tmp/redis-stable make
+
+  # - name: Run install binaries
+  #   shell: chdir=/tmp/redis-stable make install
+
+  # - name: Create configuration directory
+  #   file: path=/etc/redis state=directory
+>>>>>>> 1353381f8e0c2b9c35fe0d3fb36a606d90c31f02
 
   - name: Copy redis configuration file
     template: src=redis.conf dest=/etc/redis/redis.conf
 
+<<<<<<< HEAD
   - name: Copy redis service
     template: src=redis.service dest=/etc/systemd/system/redis.service
 
   - name: Start redis service
     service: name=redis state=restarted
+=======
+  # - name: Create data directory
+  #   file: path=/var/lib/redis state=directory mode=0770
+
+  # - name: Copy redis service
+  #   template: src=redis.service dest=/etc/systemd/system/redis.service
+
+  - name: Start redis service
+    service: name=redis-server state=restarted
+>>>>>>> 1353381f8e0c2b9c35fe0d3fb36a606d90c31f02
