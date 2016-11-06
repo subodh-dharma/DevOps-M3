@@ -13,29 +13,84 @@ var client = redis.createClient(6379, '54.146.135.5', {})
 
 var extIP = require('external-ip');
 
-var getIP = extIP({
-    replace: true,
-    services: ['http://ifconfig.co/x-real-ip', 'http://ifconfig.io/ip'],
-    timeout: 600,
-    getIP: 'parallel'
-});
 
-getIP(function (err, ip) {
-    if (err) {
-        throw err;
-    }
-    cache.put('public_ip', ip);
-    //COUNTING per second requests
-    setInterval(function() {
-        console.log("Request Frequency :" + requestfreq);
-        requestfreq = 0;
-        client.set(cache.get('public_ip'), requestfreq);
-    }, 1000);
 
-    client.lpush(['active_servers', ip], function(err, reply){
-        console.log('Server added to list');
+if (process.argv.slice(2)[0] == 'clearRedis')
+{
+    var getIP = extIP({
+        replace: true,
+        services: ['http://ifconfig.co/x-real-ip', 'http://ifconfig.io/ip'],
+        timeout: 600,
+        getIP: 'parallel'
     });
-});
+
+    getIP(function (err, ip) {
+        if (err) {
+            throw err;
+        }
+        client.lrem('active_servers', 0, ip, function(err,reply){
+            if (err) throw err;
+        });
+        client.lrem('serving_servers', 0, ip, function(err,reply){
+            if (err) throw err;
+            process.exit();
+        });
+    })
+}
+
+else
+{
+    var getIP = extIP({
+        replace: true,
+        services: ['http://ifconfig.co/x-real-ip', 'http://ifconfig.io/ip'],
+        timeout: 600,
+        getIP: 'parallel'
+    });
+
+    getIP(function (err, ip) {
+        if (err) {
+            throw err;
+        }
+        cache.put('public_ip', ip);
+        //COUNTING per second requests
+        setInterval(function() {
+            console.log("Request Frequency :" + requestfreq);
+            requestfreq = 0;
+            client.set(cache.get('public_ip'), requestfreq);
+        }, 1000);
+
+        client.llen('serving_servers', function(err, serv_count){
+            if (serv_count >= 1)
+            {
+                client.lpush(['active_servers', ip], function(err, reply){
+                    console.log('Server added to list');
+                });
+            }
+            else
+            {
+                client.lpush(['serving_servers', ip], function(err, reply){
+                    console.log('Server adding to serving list');
+                });
+            }
+        })
+
+        // HTTP SERVER
+        var args = process.argv.slice(2);
+
+        if (args.length == 0) {
+            args = ["3000"];
+        }
+        var portNum = parseInt(args[0]);
+        var server = app.listen(portNum, 'localhost', function() {
+
+            var host = server.address().address
+            var port = server.address().port
+
+            console.log('Example app listening at http://%s:%s', host, port)
+        })
+
+    });
+}
 ///////////// WEB ROUTES
 // Add hook to make it easier to get all visited URLS.
 
@@ -114,22 +169,6 @@ app.use(function(req, res, next) {
 
     next(); // Passing the request to the next handler in the stack.
 });
-
-// HTTP SERVER
-var args = process.argv.slice(2);
-
-if (args.length == 0) {
-    args = ["3000"];
-}
-var portNum = parseInt(args[0]);
-var server = app.listen(portNum, 'localhost', function() {
-
-    var host = server.address().address
-    var port = server.address().port
-
-    console.log('Example app listening at http://%s:%s', host, port)
-})
-
 
 
 function teardown() {
