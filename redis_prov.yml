@@ -26,7 +26,7 @@
     unarchive: src=/tmp/redis-stable.tar.gz dest=/tmp/redis-stable
 
   - name: Run makefile
-    make: chdir=/tmp/redis-stable
+    shell: /tmp/redis-stable/make
 
   - name: Run install binaries
-    make: chdir=/tmp/redis-stable target=install
+    shell: /tmp/redis-stable/make install
