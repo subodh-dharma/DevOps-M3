@@ -57,7 +57,7 @@
     ufw: rule=allow name='Nginx Full'
 
   - name: Starting Request Monitoring services
-    raw: forever start monitor_requests.js
+    raw: forever start /home/production/monitor_requests.js
 
   - name: Starting Memory Monitoring services
-    raw: forever start monitor_memory.js
+    raw: forever start /home/production/monitor_memory.js
