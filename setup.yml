@@ -4,7 +4,13 @@
   pre_tasks:
   - name: Install python2
     raw: sudo apt-get -y install python-simplejson
-  
+ 
+  - name: Uninstall forever
+    raw: npm uninstall forever -g
+
+  - name: Clear directory
+    raw: rm -rf /home/production
+ 
   tasks:
 
   - name: Install NodeJS
