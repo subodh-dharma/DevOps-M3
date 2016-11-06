@@ -4,6 +4,9 @@
   pre_tasks:
   - name: Install python2
     raw: sudo apt-get -y install python-simplejson
+
+  - name: Stop all forever processes
+    raw: forever stopall
  
   - name: Uninstall forever
     raw: npm uninstall forever -g
