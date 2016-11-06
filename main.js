@@ -8,15 +8,14 @@ var ip = require('ip');
 var cache = require('memory-cache');
 
 var requestfreq = 0;
-// REDIS - HOSTED-SHARED with JENKINS MACHINE
-var client = redis.createClient(6379, '54.146.135.5', {})
+// REDIS SEPARATE SERVER
+var client = redis.createClient(6379, '52.90.252.26', {})
 
 var extIP = require('external-ip');
 
 
 
-if (process.argv.slice(2)[0] == 'clearRedis')
-{
+if (process.argv.slice(2)[0] == 'clearRedis') {
     var getIP = extIP({
         replace: true,
         services: ['http://ifconfig.co/x-real-ip', 'http://ifconfig.io/ip'],
@@ -24,22 +23,19 @@ if (process.argv.slice(2)[0] == 'clearRedis')
         getIP: 'parallel'
     });
 
-    getIP(function (err, ip) {
+    getIP(function(err, ip) {
         if (err) {
             throw err;
         }
-        client.lrem('active_servers', 0, 'http://'+ip, function(err,reply){
+        client.lrem('active_servers', 0, 'http://' + ip, function(err, reply) {
             if (err) throw err;
         });
-        client.lrem('serving_servers', 0, 'http://'+ip, function(err,reply){
+        client.lrem('serving_servers', 0, 'http://' + ip, function(err, reply) {
             if (err) throw err;
             process.exit();
         });
     })
-}
-
-else
-{
+} else {
     var getIP = extIP({
         replace: true,
         services: ['http://ifconfig.co/x-real-ip', 'http://ifconfig.io/ip'],
@@ -47,7 +43,7 @@ else
         getIP: 'parallel'
     });
 
-    getIP(function (err, ip) {
+    getIP(function(err, ip) {
         if (err) {
             throw err;
         }
@@ -59,16 +55,13 @@ else
             client.set(cache.get('public_ip'), requestfreq);
         }, 1000);
 
-        client.llen('serving_servers', function(err, serv_count){
-            if (serv_count >= 1)
-            {
-                client.lpush(['active_servers', 'http://'+ip], function(err, reply){
+        client.llen('serving_servers', function(err, serv_count) {
+            if (serv_count >= 1) {
+                client.lpush(['active_servers', 'http://' + ip], function(err, reply) {
                     console.log('Server added to list');
                 });
-            }
-            else
-            {
-                client.lpush(['serving_servers', 'http://'+ip], function(err, reply){
+            } else {
+                client.lpush(['serving_servers', 'http://' + ip], function(err, reply) {
                     console.log('Server adding to serving list');
                 });
             }
@@ -176,7 +169,7 @@ function teardown() {
         console.log("infrastructure shutdown");
         process.exit();
     });
-    client.lrem('active_servers', 1, cache.get('public_ip'), function(err,reply){
+    client.lrem('active_servers', 1, cache.get('public_ip'), function(err, reply) {
         if (err) throw err;
         process.exit();
     });
@@ -187,6 +180,6 @@ process.on('exit', function() {
     teardown();
 });
 
-process.on('SIGINT', function(){
+process.on('SIGINT', function() {
     teardown();
 });
