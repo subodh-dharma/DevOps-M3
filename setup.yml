@@ -33,3 +33,15 @@
 
   - name: Starting Web Server
     command: forever start /home/production/main.js
+
+  - name: Install nginx
+    apt: pkg=nginx state=installed update_cache=yes
+
+  - name: Copy nginx configuration
+    template: src=default dest=/etc/nginx/sites-available/default
+
+  - name: Restart nginx
+    service: name=nginx state=restarted
+
+  - name: Allow nginx traffic through firewall
+    ufw: rule=allow name='Nginx Full'
