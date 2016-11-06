@@ -5,12 +5,36 @@ var fs = require('fs')
 var app = express()
 var exec = require('child_process').exec;
 var ip = require('ip');
+var cache = require('memory-cache');
+
 var requestfreq = 0;
 // REDIS - HOSTED-SHARED with JENKINS MACHINE
 var client = redis.createClient(6379, '54.146.135.5', {})
 
+var extIP = require('external-ip');
+
+var getIP = extIP({
+    replace: true,
+    services: ['http://ifconfig.co/x-real-ip', 'http://ifconfig.io/ip'],
+    timeout: 600,
+    getIP: 'parallel'
+});
+
+getIP(function (err, ip) {
+    if (err) {
+        throw err;
+    }
+    cache.put('public_ip', ip);
+    //COUNTING per second requests
+	setInterval(function() {
+	    console.log("Request Frequency :" + requestfreq);
+	    requestfreq = 0;
+	    client.set(cache.get('public_ip'), requestfreq);
+	}, 1000);
+});
 ///////////// WEB ROUTES
 // Add hook to make it easier to get all visited URLS.
+
 var history = [];
 app.use(function(req, res, next) {
     console.log(req.method, req.url);
@@ -18,7 +42,7 @@ app.use(function(req, res, next) {
     //console.log("URL :" + req.url);
     //history.push(req.originalUrl);
     requestfreq++;
-    client.set(ip.address(), requestfreq);
+    client.set(cache.get('public_ip'), requestfreq);
     client.lpush('queue', req.url);
     // ... INSERT HERE.
     app.get('/', function(req, res) {
@@ -102,12 +126,7 @@ var server = app.listen(portNum, 'localhost', function() {
     console.log('Example app listening at http://%s:%s', host, port)
 })
 
-//COUNTING per second requests
-setInterval(function() {
-    console.log("Request Frequency :" + requestfreq);
-    requestfreq = 0;
-    client.set(ip.address(), requestfreq);
-}, 1000);
+
 
 function teardown() {
     exec('forever stopall', function() {

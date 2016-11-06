@@ -5,6 +5,8 @@
   "main": "createDOInstance.js",
   "dependencies": {
     "aws-sdk": "~2.6.1",
+    "external-ip": "^0.2.4",
+    "memory-cache": "^0.1.6",
     "needle": "~1.1.2",
     "sleep": "~4.0.0",
     "ssh-keygen": "~0.4.0"
