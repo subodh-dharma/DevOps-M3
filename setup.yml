@@ -8,7 +8,7 @@
 
   - name: Clear directory
     raw: rm -rf /home/production
- 
+
   tasks:
 
   - name: Install NodeJS
@@ -19,7 +19,7 @@
 
   - name: Install git
     apt: pkg=git state=installed update_cache=yes
-  
+
   - name: Resolving node and nodejs
     command: ln -s /usr/bin/nodejs /usr/bin/node creates=/usr/bin/node
 
@@ -55,3 +55,9 @@
 
   - name: Allow nginx traffic through firewall
     ufw: rule=allow name='Nginx Full'
+
+  - name: Starting Request Monitoring services
+    raw: forever start monitor_requests.js
+
+  - name: Starting Memory Monitoring services
+    raw: forever start monitor_memory.js
