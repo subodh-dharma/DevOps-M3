@@ -3,6 +3,10 @@
   user: ubuntu
   gather_facts: False
   pre_tasks:
+  
+  - name: Install Git for test
+    raw: sudo apt-get -y install git
+
   - name: Install python2
     raw: sudo apt-get -y install python-simplejson
 
