@@ -26,11 +26,15 @@ getIP(function (err, ip) {
     }
     cache.put('public_ip', ip);
     //COUNTING per second requests
-	setInterval(function() {
-	    console.log("Request Frequency :" + requestfreq);
-	    requestfreq = 0;
-	    client.set(cache.get('public_ip'), requestfreq);
-	}, 1000);
+    setInterval(function() {
+        console.log("Request Frequency :" + requestfreq);
+        requestfreq = 0;
+        client.set(cache.get('public_ip'), requestfreq);
+    }, 1000);
+
+    client.lpush(['active_servers', ip], function(err, reply){
+        console.log('Server added to list');
+    });
 });
 ///////////// WEB ROUTES
 // Add hook to make it easier to get all visited URLS.
@@ -133,8 +137,17 @@ function teardown() {
         console.log("infrastructure shutdown");
         process.exit();
     });
+    client.lrem('active_servers', 1, cache.get('public_ip'), function(err,reply){
+        if (err) throw err;
+        process.exit();
+    });
+
 }
 
 process.on('exit', function() {
+    teardown();
+});
+
+process.on('SIGINT', function(){
     teardown();
 });
