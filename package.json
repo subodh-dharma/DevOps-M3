@@ -16,7 +16,8 @@
     "ip": "~1.1.4",
     "multer": "^1.2.0",
     "redis": "^2.6.3",
-    "sendmail": "^1.0.0"
+    "sendmail": "^1.0.0",
+    "os-monitor": "~1.0.5"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
