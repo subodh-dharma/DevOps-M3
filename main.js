@@ -28,10 +28,10 @@ if (process.argv.slice(2)[0] == 'clearRedis')
         if (err) {
             throw err;
         }
-        client.lrem('active_servers', 0, ip, function(err,reply){
+        client.lrem('active_servers', 0, 'http://'+ip, function(err,reply){
             if (err) throw err;
         });
-        client.lrem('serving_servers', 0, ip, function(err,reply){
+        client.lrem('serving_servers', 0, 'http://'+ip, function(err,reply){
             if (err) throw err;
             process.exit();
         });
@@ -62,13 +62,13 @@ else
         client.llen('serving_servers', function(err, serv_count){
             if (serv_count >= 1)
             {
-                client.lpush(['active_servers', ip], function(err, reply){
+                client.lpush(['active_servers', 'http://'+ip], function(err, reply){
                     console.log('Server added to list');
                 });
             }
             else
             {
-                client.lpush(['serving_servers', ip], function(err, reply){
+                client.lpush(['serving_servers', 'http://'+ip], function(err, reply){
                     console.log('Server adding to serving list');
                 });
             }
