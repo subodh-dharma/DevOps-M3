@@ -3,7 +3,7 @@ Description=Redis In-Memory Data Store
 After=network.target
 
 [Service]
-ExecStart=/home/redis-3.2.5/src/redis-server
+ExecStart=/home/redis-3.2.5/src/redis-server /home/redis-3.2.5/redis.conf
 ExecStop=/home/redis-3.2.5/src/redis-cli shutdown
 Restart=always
 
