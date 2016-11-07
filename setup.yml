@@ -56,8 +56,8 @@
   - name: Allow nginx traffic through firewall
     ufw: rule=allow name='Nginx Full'
 
-  - name: Starting Request Monitoring services
-    raw: su ubuntu -c "forever start /home/production/monitor_requests.js"
+  #- name: Starting Request Monitoring services
+  #  raw: su ubuntu -c "forever start /home/production/monitor_requests.js"
 
-  - name: Starting Memory Monitoring services
-    raw: su ubuntu -c "forever start /home/production/monitor_memory.js"
+  #- name: Starting Memory Monitoring services
+  #  raw: su ubuntu -c "forever start /home/production/monitor_memory.js"
