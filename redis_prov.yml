@@ -23,7 +23,7 @@
       dest: /home/
 
   - name: Untar
-    unarchive: src=/home/redis-3.2.5.tar.gz dest=/home/ creates=yes remote_src=yes
+    shell: chdir=/home tar xzf redis-3.2.5.tar.gz
 
   - name: Run makefile
     shell: chdir=/home/redis-3.2.5 make
