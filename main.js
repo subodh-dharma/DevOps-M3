@@ -37,6 +37,7 @@ if (process.argv.slice(2)[0] == 'clearRedis') {
         client.lrem('canary_servers', 0, 'http://' + ip, function(err, reply){
             if(err) throw err;
         });
+        process.exit();
     })
 }
 else if (process.argv.slice(2)[0] == 'canaryRelease') {
