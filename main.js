@@ -70,11 +70,7 @@ else if (process.argv.slice(2)[0] == 'canaryRelease') {
             console.log('Server added to list');
         });
         // HTTP SERVER
-        var args = process.argv.slice(2);
-
-        if (args.length == 0) {
-            args = ["3000"];
-        }
+        args = ["3000"];
         var portNum = parseInt(args[0]);
         var server = app.listen(portNum, 'localhost', function() {
 
