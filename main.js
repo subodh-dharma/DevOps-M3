@@ -213,7 +213,7 @@ app.use(function(req, res, next) {
         res.send(date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds());
     })
 
-    app.get('/disable/canary', function(req, res)){
+    app.get('/disable/canary', function(req, res){
         client.del('canary_servers', function(err, reply){
             if (err) throw err;
             if (reply)
@@ -225,7 +225,7 @@ app.use(function(req, res, next) {
                 res.send("No canary feature found to disable");
             }
         })
-    }
+    })
 
 
 
