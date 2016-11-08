@@ -30,7 +30,7 @@
     file: path=/home/proxy state=directory
 
   - name: Copying Server Software
-    git: repo=https://github.com/subodh-dharma/DevOps-M3.git dest=/home/proxy
+    git: repo=https://github.com/subodh-dharma/DevOps-M3.git dest=/home/proxy version=proxy
 
   - name: Installing Server Software
     shell: npm --prefix /home/proxy install
