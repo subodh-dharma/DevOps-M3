@@ -51,13 +51,13 @@ if (process.argv.slice(2)[0] == 'clearRedis') {
         cache.put('public_ip', ip);
         //COUNTING per second requests
         setInterval(function() {
-            if(requestfreq > 4)
+            if(requestfreq >1000)
             {
+                console.log("Request Frequency :" + requestfreq);
                 console.log("Request Overload");
                 console.log("Trying to provision a new server");
                 monitor.reqOverload('http://'+ip);
             }
-            console.log("Request Frequency :" + requestfreq);
             requestfreq = 0;
             client.set(cache.get('public_ip'), requestfreq);
         }, 1000);
