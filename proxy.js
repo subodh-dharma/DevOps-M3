@@ -33,6 +33,5 @@ var server = http.createServer(function(req, res){
         })
         counter = 0;
     }
-  });
 });
 server.listen(3000);
