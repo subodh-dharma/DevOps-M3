@@ -213,6 +213,20 @@ app.use(function(req, res, next) {
         res.send(date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds());
     })
 
+    app.get('/disable/canary', function(req, res)){
+        client.del('canary_servers', function(err, reply){
+            if (err) throw err;
+            if (reply)
+            {
+                res.send("Canary feature is disabled");
+            }
+            else
+            {
+                res.send("No canary feature found to disable");
+            }
+        })
+    }
+
 
 
     next(); // Passing the request to the next handler in the stack.
