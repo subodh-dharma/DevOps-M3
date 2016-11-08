@@ -51,7 +51,7 @@ if (process.argv.slice(2)[0] == 'clearRedis') {
         cache.put('public_ip', ip);
         //COUNTING per second requests
         setInterval(function() {
-            if(requestfreq >1000)
+            if(requestfreq >500)
             {
                 console.log("Request Frequency :" + requestfreq);
                 console.log("Request Overload");
@@ -96,7 +96,7 @@ if (process.argv.slice(2)[0] == 'clearRedis') {
 
 var history = [];
 app.use(function(req, res, next) {
-    console.log(req.method, req.url);
+    // console.log(req.method, req.url);
 
     //console.log("URL :" + req.url);
     //history.push(req.originalUrl);
