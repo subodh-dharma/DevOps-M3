@@ -1,4 +1,4 @@
-- hosts: production
+- hosts: canary
   sudo: yes
   user: ubuntu
   gather_facts: False
@@ -7,7 +7,7 @@
     raw: sudo apt-get -y install python-simplejson
 
   - name: Clear directory
-    raw: rm -rf /home/production
+    raw: rm -rf /home/canary
 
   tasks:
 
@@ -27,22 +27,22 @@
     shell: npm install forever -g
 
   - name: Create Project folder
-    file: path=/home/production state=directory
+    file: path=/home/canary state=directory
 
   - name: Copying Server Software
-    git: repo=https://github.com/subodh-dharma/DevOps-M3.git dest=/home/production
+    git: repo=https://github.com/subodh-dharma/DevOps-M3.git dest=/home/canary version=canary
 
   - name: Installing Server Software
-    shell: npm --prefix /home/production install
+    shell: npm --prefix /home/canary install
 
   - name: Clear Server data from Redis
-    raw: node /home/production/main clearRedis
+    raw: node /home/canary/main clearRedis
 
   - name: Stop all forever processes
     raw: forever stopall
 
   - name: Starting Web Server
-    command: forever start /home/production/main.js
+    command: forever start /home/canary/main.js canaryRelease
 
   - name: Install nginx
     apt: pkg=nginx state=installed update_cache=yes
@@ -60,4 +60,4 @@
   #  raw: su ubuntu -c "forever start /home/production/monitor_requests.js"
 
   - name: Starting Memory Monitoring services
-    raw: forever start /home/production/monitor_memory.js
+    raw: forever start /home/canary/monitor_memory.js

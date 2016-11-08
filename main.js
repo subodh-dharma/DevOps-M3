@@ -33,10 +33,59 @@ if (process.argv.slice(2)[0] == 'clearRedis') {
         });
         client.lrem('serving_servers', 0, 'http://' + ip, function(err, reply) {
             if (err) throw err;
-            process.exit();
+        });
+        client.lrem('canary_servers', 0, 'http://' + ip, function(err, reply){
+            if(err) throw err;
         });
     })
-} else {
+}
+else if (process.argv.slice(2)[0] == 'canaryRelease') {
+     var getIP = extIP({
+        replace: true,
+        services: ['http://ifconfig.co/x-real-ip', 'http://ifconfig.io/ip'],
+        timeout: 600,
+        getIP: 'parallel'
+    });
+
+    getIP(function(err, ip) {
+        if (err) {
+            throw err;
+        }
+        cache.put('public_ip', ip);
+        //COUNTING per second requests
+        setInterval(function() {
+            if(requestfreq >500)
+            {
+                console.log("Request Frequency :" + requestfreq);
+                console.log("Request Overload");
+                console.log("Trying to provision a new server");
+                monitor.reqOverload('http://'+ip);
+            }
+            requestfreq = 0;
+            client.set(cache.get('public_ip'), requestfreq);
+        }, 1000);
+
+        client.lpush(['canary_servers', 'http://' + ip], function(err, reply) {
+            console.log('Server added to list');
+        });
+        // HTTP SERVER
+        var args = process.argv.slice(2);
+
+        if (args.length == 0) {
+            args = ["3000"];
+        }
+        var portNum = parseInt(args[0]);
+        var server = app.listen(portNum, 'localhost', function() {
+
+            var host = server.address().address
+            var port = server.address().port
+
+            console.log('Example app listening at http://%s:%s', host, port)
+        })
+
+    });
+}
+else {
     var getIP = extIP({
         replace: true,
         services: ['http://ifconfig.co/x-real-ip', 'http://ifconfig.io/ip'],
@@ -91,6 +140,8 @@ if (process.argv.slice(2)[0] == 'clearRedis') {
 
     });
 }
+
+
 ///////////// WEB ROUTES
 // Add hook to make it easier to get all visited URLS.
 
