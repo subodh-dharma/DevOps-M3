@@ -157,7 +157,7 @@ app.use(function(req, res, next) {
     client.lpush('queue', req.url);
     // ... INSERT HERE.
     app.get('/', function(req, res) {
-        res.send('hello world')
+        res.send('hello world canary world')
     })
 
     app.get('/get', function(req, res) {
