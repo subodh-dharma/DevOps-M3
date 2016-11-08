@@ -21,8 +21,6 @@ monitor.on('freemem', function(event) {
         html: 'HIGH MEMORY USAGE.\n Attempting to clean cache and free memory'
     }, function(err, reply) {});
 
-    process.exit();
-
     // shell('./freemem.sh', function(error, stdout, stderr) {
         // console.log(error);
     // });
