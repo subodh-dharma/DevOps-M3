@@ -42,7 +42,7 @@
     raw: forever stopall
 
   - name: Starting Web Server
-    command: su ubuntu -c "forever start /home/production/main.js"
+    command: forever start /home/production/main.js
 
   - name: Install nginx
     apt: pkg=nginx state=installed update_cache=yes
