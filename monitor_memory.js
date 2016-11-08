@@ -3,8 +3,8 @@ var sendmail = require('sendmail')();
 var shell = require('child_process').exec;
 monitor.start({
     delay: 3000 // interval in ms between monitor cycles
-        ,
-    freemem: 155180400 // freemem under which event 'freemem' is triggered
+    , freemem: 100180400 // freemem under which event 'freemem' is triggered
+    , immediate: false
 }).pipe(process.stdout);
 
 
@@ -21,16 +21,18 @@ monitor.on('freemem', function(event) {
         html: 'HIGH MEMORY USAGE.\n Attempting to clean cache and free memory'
     }, function(err, reply) {});
 
-    shell('./freemem.sh', function(error, stdout, stderr) {
-        console.log(error);
-    });
+    process.exit();
+
+    // shell('./freemem.sh', function(error, stdout, stderr) {
+        // console.log(error);
+    // });
 
 });
 
 // change config while monitor is running
-monitor.config({
-    freemem: 0.8 // alarm when 80% or less free memory available
-});
+// monitor.config({
+//     freemem: 0.8 // alarm when 80% or less free memory available
+// });
 
-// check whether monitor is running or not
-monitor.isRunning(); // -> true / false
+// // check whether monitor is running or not
+// monitor.isRunning(); // -> true / false
