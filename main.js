@@ -7,12 +7,13 @@ var exec = require('child_process').exec;
 var ip = require('ip');
 var cache = require('memory-cache');
 
+var monitor = require('./monitor_requests.js');
+
 var requestfreq = 0;
 // REDIS SEPARATE SERVER
 var client = redis.createClient(6379, '52.90.252.26', {})
 
 var extIP = require('external-ip');
-
 
 
 if (process.argv.slice(2)[0] == 'clearRedis') {
@@ -50,6 +51,12 @@ if (process.argv.slice(2)[0] == 'clearRedis') {
         cache.put('public_ip', ip);
         //COUNTING per second requests
         setInterval(function() {
+            if(requestfreq > 4)
+            {
+                console.log("Request Overload");
+                console.log("Trying to provision a new server");
+                monitor.reqOverload('http://'+ip);
+            }
             console.log("Request Frequency :" + requestfreq);
             requestfreq = 0;
             client.set(cache.get('public_ip'), requestfreq);
