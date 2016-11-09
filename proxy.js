@@ -1,7 +1,18 @@
 var redis = require('redis')
 var httpProxy = require('http-proxy')
 var http = require('http')
-var client = redis.createClient(6379, '52.90.252.26', {})
+var client = {};
+if(process.argv.slice(2)[0]){
+	var redisip = process.argv.slice(2)[0];
+	console.log(redisip);
+	client = redis.createClient(6379, redisip, {});
+	
+}else
+{
+	throw Error("REDIS ip required as parameter");
+}
+
+
 
 
 var proxy = httpProxy.createProxyServer({});
