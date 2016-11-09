@@ -26,15 +26,16 @@
   - name: Install forever
     shell: npm install forever -g
 
-  - name: Create Project folder
-    file: path=/home/production state=directory
+  #- name: Create Project folder
+  #  file: path=/home/production state=directory
 
-  - name: Create Log files setup
-    file: path=/home/production/logs state=directory
 
   - name: Copying Server Software
     git: repo=https://github.com/subodh-dharma/DevOps-M3.git dest=/home/production
 
+  - name: Create Log files setup
+    file: path=/home/production/logs state=directory
+  
   - name: Installing Server Software
     shell: npm --prefix /home/production install
 
