@@ -8,13 +8,13 @@ var ip = require('ip');
 var cache = require('memory-cache');
 
 var monitor = require('./monitor_requests.js');
-var client = redis.createClient(); //default initialization
-var requestfreq = 0;
+var client = ; //default initialization
+var requestfreq = {};
 // REDIS SEPARATE SERVER
 //var client = redis.createClient(6379, '52.90.252.26', {});
 if(process.argv.slice(2)[0]){
 	var redisip = process.argv.slice(2)[0];
-	//console.log(redisip);
+	console.log(redisip);
 	client = redis.createClient(6379, redisip, {});
 }else
 {	throw Error('REDIS IP required');
