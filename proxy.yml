@@ -31,6 +31,9 @@
 
   - name: Copying Server Software
     git: repo=https://github.com/subodh-dharma/DevOps-M3.git dest=/home/proxy version=proxy
+  
+  - name: Creating Logs file setup
+    file: path=/home/proxy/logs state=directory
 
   - name: Installing Server Software
     shell: npm --prefix /home/proxy install
@@ -39,7 +42,7 @@
     raw: forever stopall
 
   - name: Starting Web Server
-    command: forever start /home/proxy/proxy.js
+    command: forever start -l /home/proxy/logs/forever.log -o /home/proxy/out.log -e /home/proxy/err.log /home/proxy/proxy.js
 
   - name: Install nginx
     apt: pkg=nginx state=installed update_cache=yes
