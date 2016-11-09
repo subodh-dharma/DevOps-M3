@@ -78,7 +78,7 @@ else if (process.argv.slice(2)[1] == 'canaryRelease') {
             console.log('Server added to list');
         });
         // HTTP SERVER
-        args = ["3000"];
+        /*args = ["3000"];
         var portNum = parseInt(args[0]);
         var server = app.listen(portNum, 'localhost', function() {
 
@@ -86,7 +86,7 @@ else if (process.argv.slice(2)[1] == 'canaryRelease') {
             var port = server.address().port
 
             console.log('Example app listening at http://%s:%s', host, port)
-        })
+        })*/
 
     });
 }
@@ -129,12 +129,13 @@ else {
         })
 
         // HTTP SERVER
-        var args = process.argv.slice(2);
+        
 
-        if (args.length == 0) {
-            args = ["3000"];
-        }
+        
+        args = ["3000"];
+        
         var portNum = parseInt(args[0]);
+
         var server = app.listen(portNum, 'localhost', function() {
 
             var host = server.address().address
