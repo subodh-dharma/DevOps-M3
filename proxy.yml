@@ -42,7 +42,7 @@
     raw: forever stopall
 
   - name: Starting Web Server
-    command: forever start -l /home/proxy/logs/forever.log -o /home/proxy/out.log -e /home/proxy/err.log /home/proxy/proxy.js
+    command: forever start -l /home/proxy/logs/forever.log -o /home/proxy/logs/out.log -e /home/proxy/logs/err.log /home/proxy/proxy.js
 
   - name: Install nginx
     apt: pkg=nginx state=installed update_cache=yes
