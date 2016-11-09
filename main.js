@@ -8,15 +8,23 @@ var ip = require('ip');
 var cache = require('memory-cache');
 
 var monitor = require('./monitor_requests.js');
-
+var client = redis.createClient(); //default initialization
 var requestfreq = 0;
 // REDIS SEPARATE SERVER
-var client = redis.createClient(6379, '52.90.252.26', {})
+//var client = redis.createClient(6379, '52.90.252.26', {});
+if(process.argv.slice(2)[0]){
+	var redisip = process.argv.slice(2)[0];
+	//console.log(redisip);
+	client = redis.createClient(6379, redisip, {});
+}else
+{	throw Error('REDIS IP required');
+	console.log('REDIS IP required!!');
+}
 
 var extIP = require('external-ip');
 
 
-if (process.argv.slice(2)[0] == 'clearRedis') {
+if (process.argv.slice(2)[1] == 'clearRedis') {
     var getIP = extIP({
         replace: true,
         services: ['http://ifconfig.co/x-real-ip', 'http://ifconfig.io/ip'],
@@ -40,7 +48,7 @@ if (process.argv.slice(2)[0] == 'clearRedis') {
         process.exit();
     })
 }
-else if (process.argv.slice(2)[0] == 'canaryRelease') {
+else if (process.argv.slice(2)[1] == 'canaryRelease') {
      var getIP = extIP({
         replace: true,
         services: ['http://ifconfig.co/x-real-ip', 'http://ifconfig.io/ip'],

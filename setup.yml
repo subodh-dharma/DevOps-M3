@@ -39,14 +39,13 @@
     shell: npm --prefix /home/production install
 
   - name: Clear Server data from Redis
-    raw: node /home/production/main clearRedis
+    raw: node /home/production/main '52.90.113.118' clearRedis
 
   - name: Stop all forever processes
     raw: forever stopall
 
   - name: Starting Web Server
-    command: forever start /home/production/main.js -l /home/production/logs/mainforever.log -o /home/production/logs/mainout.log -e /home/production/logs/mainerr.log
-
+    command: forever start  -l /home/production/logs/mainforever.log -o /home/production/logs/mainout.log -e /home/production/logs/mainerr.log /home/production/main.js '52.90.252.26'
   - name: Install nginx
     apt: pkg=nginx state=installed update_cache=yes
 
