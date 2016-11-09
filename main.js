@@ -8,7 +8,7 @@ var ip = require('ip');
 var cache = require('memory-cache');
 
 var monitor = require('./monitor_requests.js');
-var client = ; //default initialization
+var client = {}; //default initialization
 var requestfreq = {};
 // REDIS SEPARATE SERVER
 //var client = redis.createClient(6379, '52.90.252.26', {});
