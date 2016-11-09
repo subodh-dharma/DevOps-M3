@@ -29,6 +29,9 @@
   - name: Create Project folder
     file: path=/home/production state=directory
 
+  - name: Create Log files setup
+    file: path=/home/production/logs state=directory
+
   - name: Copying Server Software
     git: repo=https://github.com/subodh-dharma/DevOps-M3.git dest=/home/production
 
@@ -42,7 +45,7 @@
     raw: forever stopall
 
   - name: Starting Web Server
-    command: forever start /home/production/main.js
+    command: forever start /home/production/main.js -l /home/production/logs/mainforever.log -o /home/production/logs/mainout.log -e /home/production/logs/mainerr.log
 
   - name: Install nginx
     apt: pkg=nginx state=installed update_cache=yes
@@ -60,4 +63,4 @@
   #  raw: su ubuntu -c "forever start /home/production/monitor_requests.js"
 
   - name: Starting Memory Monitoring services
-    raw: forever start /home/production/monitor_memory.js
+    raw: forever start /home/production/monitor_memory.js -l /home/production/logs/monitorforever.log -o /home/production/logs/monitorout.log -e /home/production/logs/monitorerr.log
