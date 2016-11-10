@@ -6,6 +6,10 @@
 * Subodh Dharmadhikari (ssdharma)
 * Matrika Rohatgi (mrohatgi2)
 
+#### Jenkins Configuration [files](./config)
+
+#### Screencast [Link](https://youtu.be/wNY121P74cI?list=PLwmjVRRFEyJDraYS1eGJW9PHWPzdCaIVD)
+
 
 ## Infrastructure Setup
 
