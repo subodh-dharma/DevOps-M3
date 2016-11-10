@@ -42,7 +42,7 @@
     raw: forever stopall
 
   - name: Starting Web Server
-    command: forever start -l /home/proxy/logs/forever.log -o /home/proxy/logs/out.log -e /home/proxy/logs/err.log /home/proxy/proxy.js 52.90.252.26
+    command: forever start -l /home/proxy/logs/forever.log -o /home/proxy/logs/out.log -e /home/proxy/logs/err.log /home/proxy/proxy.js {{hostvars['redis']['ansible_host']}}
   - name: Install nginx
     apt: pkg=nginx state=installed update_cache=yes
 
