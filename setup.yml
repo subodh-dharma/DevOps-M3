@@ -19,6 +19,9 @@
 
   - name: Install git
     apt: pkg=git state=installed update_cache=yes
+  
+  - name: Install Stress package for stress testing
+    apt: pkg=stress state=installed update_cache=yes
 
   - name: Resolving node and nodejs
     command: ln -s /usr/bin/nodejs /usr/bin/node creates=/usr/bin/node
