@@ -12,13 +12,13 @@ var client = {}; //default initialization
 var requestfreq = {};
 // REDIS SEPARATE SERVER
 //var client = redis.createClient(6379, '52.90.252.26', {});
-if(process.argv.slice(2)[0]){
-	var redisip = process.argv.slice(2)[0];
-	console.log(redisip);
-	client = redis.createClient(6379, redisip, {});
-}else
-{	throw Error('REDIS IP required');
-	console.log('REDIS IP required!!');
+if (process.argv.slice(2)[0]) {
+    var redisip = process.argv.slice(2)[0];
+    console.log(redisip);
+    client = redis.createClient(6379, redisip, {});
+} else {
+    throw Error('REDIS IP required');
+    console.log('REDIS IP required!!');
 }
 
 var extIP = require('external-ip');
@@ -42,14 +42,13 @@ if (process.argv.slice(2)[1] == 'clearRedis') {
         client.lrem('serving_servers', 0, 'http://' + ip, function(err, reply) {
             if (err) throw err;
         });
-        client.lrem('canary_servers', 0, 'http://' + ip, function(err, reply){
-            if(err) throw err;
+        client.lrem('canary_servers', 0, 'http://' + ip, function(err, reply) {
+            if (err) throw err;
         });
         process.exit();
     })
-}
-else if (process.argv.slice(2)[1] == 'canaryRelease') {
-     var getIP = extIP({
+} else if (process.argv.slice(2)[1] == 'canaryRelease') {
+    var getIP = extIP({
         replace: true,
         services: ['http://ifconfig.co/x-real-ip', 'http://ifconfig.io/ip'],
         timeout: 600,
@@ -63,12 +62,11 @@ else if (process.argv.slice(2)[1] == 'canaryRelease') {
         cache.put('public_ip', ip);
         //COUNTING per second requests
         setInterval(function() {
-            if(requestfreq >500)
-            {
+            if (requestfreq > 500) {
                 console.log("Request Frequency :" + requestfreq);
                 console.log("Request Overload");
                 console.log("Trying to provision a new server");
-                monitor.reqOverload('http://'+ip);
+                monitor.reqOverload('http://' + ip);
             }
             requestfreq = 0;
             client.set(cache.get('public_ip'), requestfreq);
@@ -89,8 +87,7 @@ else if (process.argv.slice(2)[1] == 'canaryRelease') {
         })*/
 
     });
-}
-else {
+} else {
     var getIP = extIP({
         replace: true,
         services: ['http://ifconfig.co/x-real-ip', 'http://ifconfig.io/ip'],
@@ -105,12 +102,11 @@ else {
         cache.put('public_ip', ip);
         //COUNTING per second requests
         setInterval(function() {
-            if(requestfreq >500)
-            {
+            if (requestfreq > 500) {
                 console.log("Request Frequency :" + requestfreq);
                 console.log("Request Overload");
                 console.log("Trying to provision a new server");
-                monitor.reqOverload('http://'+ip);
+                monitor.reqOverload('http://' + ip);
             }
             requestfreq = 0;
             client.set(cache.get('public_ip'), requestfreq);
@@ -126,14 +122,14 @@ else {
                     console.log('Server adding to serving list');
                 });
             }
-        })
+        });
 
         // HTTP SERVER
-        
 
-        
+
+
         args = ["3000"];
-        
+
         var portNum = parseInt(args[0]);
 
         var server = app.listen(portNum, 'localhost', function() {
@@ -222,15 +218,12 @@ app.use(function(req, res, next) {
         res.send(date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds());
     })
 
-    app.get('/disable/canary', function(req, res){
-        client.del('canary_servers', function(err, reply){
+    app.get('/disable/canary', function(req, res) {
+        client.del('canary_servers', function(err, reply) {
             if (err) throw err;
-            if (reply)
-            {
+            if (reply) {
                 res.send("Canary feature is disabled");
-            }
-            else
-            {
+            } else {
                 res.send("No canary feature found to disable");
             }
         })
@@ -261,3 +254,5 @@ process.on('exit', function() {
 process.on('SIGINT', function() {
     teardown();
 });
+
+module.exports = express;
