@@ -10,15 +10,25 @@ var cache = require('memory-cache');
 var monitor = require('./monitor_requests.js');
 var client = {}; //default initialization
 var requestfreq = {};
-// REDIS SEPARATE SERVER
-//var client = redis.createClient(6379, '52.90.252.26', {});
+
+var server;
+// args = ["3000"];
+// var portNum = parseInt(args[0]);
+server = app.listen(parseInt("3000"), 'localhost', function() {
+        var host = server.address().address
+        var port = server.address().port
+        console.log('Example app listening at http://%s:%s', host, port)
+    })
+    // REDIS SEPARATE SERVER
+    //var client = redis.createClient(6379, '52.90.252.26', {});
 if (process.argv.slice(2)[0]) {
     var redisip = process.argv.slice(2)[0];
     console.log(redisip);
     client = redis.createClient(6379, redisip, {});
 } else {
-    throw Error('REDIS IP required');
-    console.log('REDIS IP required!!');
+    //throw Error('REDIS IP required');
+    console.warn('REDIS IP required!!', 'Connecting to REDIS on localhost if present!');
+    client = redis.createClient(6379, '127.0.0.1', {});
 }
 
 var extIP = require('external-ip');
@@ -75,7 +85,7 @@ if (process.argv.slice(2)[1] == 'clearRedis') {
         client.lpush(['canary_servers', 'http://' + ip], function(err, reply) {
             console.log('Server added to list');
         });
-        // HTTP SERVER
+        // HTTP SERVER --original loc
         /*args = ["3000"];
         var portNum = parseInt(args[0]);
         var server = app.listen(portNum, 'localhost', function() {
@@ -128,17 +138,13 @@ if (process.argv.slice(2)[1] == 'clearRedis') {
 
 
 
-        args = ["3000"];
-
-        var portNum = parseInt(args[0]);
-
-        var server = app.listen(portNum, 'localhost', function() {
-
-            var host = server.address().address
-            var port = server.address().port
-
-            console.log('Example app listening at http://%s:%s', host, port)
-        })
+        // args = ["3000"];
+        // var portNum = parseInt(args[0]);
+        // server = app.listen(portNum, 'localhost', function() {
+        //     var host = server.address().address
+        //     var port = server.address().port
+        //     console.log('Example app listening at http://%s:%s', host, port)
+        // })
 
     });
 }
@@ -181,6 +187,7 @@ app.use(function(req, res, next) {
     app.get('/recent', function(req, res) {
 
         client.lrange('queue', 0, 4, function(err, resp) {
+
             var head = "<html><body><ol>";
             var tail = "</ol><body></html>";
             console.log("Recent:");
@@ -244,7 +251,6 @@ function teardown() {
         if (err) throw err;
         process.exit();
     });
-
 }
 
 process.on('exit', function() {
@@ -255,4 +261,4 @@ process.on('SIGINT', function() {
     teardown();
 });
 
-module.exports = express;
+module.exports = server;
