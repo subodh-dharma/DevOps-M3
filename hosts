@@ -9,4 +9,4 @@ proxy ansible_host=54.165.113.118
 redis ansible_host=52.90.252.26
 
 [canary]
-canary ansible_host=54.152.36.209
+canary ansible_host=107.20.71.225

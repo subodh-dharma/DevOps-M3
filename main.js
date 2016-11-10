@@ -65,7 +65,11 @@ else if (process.argv.slice(2)[0] == 'canaryRelease') {
             requestfreq = 0;
             client.set(cache.get('public_ip'), requestfreq);
         }, 1000);
-
+    
+        var redisip = process.argv.slice(2)[1];
+        console.log(redisip);
+        client = redis.createClient(6379, redisip, {});
+    
         client.lpush(['canary_servers', 'http://' + ip], function(err, reply) {
             console.log('Server added to list');
         });

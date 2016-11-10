@@ -48,7 +48,7 @@
     raw: forever stopall
 
   - name: Starting Web Server
-    command: forever start -l /home/canary/logs/forever.log -o /home/canary/logs/out.log -e /home/canary/logs/err.log /home/canary/main.js canaryRelease
+    command: forever start -l /home/canary/logs/forever.log -o /home/canary/logs/out.log -e /home/canary/logs/err.log /home/canary/main.js canaryRelease {{hostvars['redis']['ansible_host']}}
 
   - name: Install nginx
     apt: pkg=nginx state=installed update_cache=yes
