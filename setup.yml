@@ -20,6 +20,9 @@
   - name: Install git
     apt: pkg=git state=installed update_cache=yes
 
+  - name: Install stress package for stress testing
+    apt: pkg=stress state=installed update_cache=yes
+
   - name: Resolving node and nodejs
     command: ln -s /usr/bin/nodejs /usr/bin/node creates=/usr/bin/node
 
@@ -32,6 +35,9 @@
   - name: Copying Server Software
     git: repo=https://github.com/subodh-dharma/DevOps-M3.git dest=/home/canary version=canary
 
+  - name: Create Log files setup
+    file: path=/home/canary/logs state=directory
+
   - name: Installing Server Software
     shell: npm --prefix /home/canary install
 
@@ -42,7 +48,7 @@
     raw: forever stopall
 
   - name: Starting Web Server
-    command: forever start /home/canary/main.js canaryRelease
+    command: forever start -l /home/canary/logs/forever.log -o /home/canary/logs/out.log -e /home/canary/logs/err.log /home/canary/main.js canaryRelease
 
   - name: Install nginx
     apt: pkg=nginx state=installed update_cache=yes
@@ -60,4 +66,4 @@
   #  raw: su ubuntu -c "forever start /home/production/monitor_requests.js"
 
   - name: Starting Memory Monitoring services
-    raw: forever start /home/canary/monitor_memory.js
+    raw: forever start -l /home/canary/logs/mon_forever.log -o /home/canary/logs/mon_out.log -e /home/canary/logs/mon_err.log /home/canary/monitor_memory.js
