@@ -3,7 +3,7 @@ prod1 ansible_host=35.162.127.229
 prod2 ansible_host=52.15.112.55
 
 [proxy]
-proxy ansible_host=54.165.113.118
+proxy ansible_host=107.20.71.225
 
 [redis]
 redis ansible_host=54.174.175.196
