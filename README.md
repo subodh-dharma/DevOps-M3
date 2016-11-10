@@ -1,6 +1,11 @@
-# DevOps-M3
-
 # Milestone 3 - DevOps
+
+## Team
+
+* Aniket Patel (apatel10)
+* Subodh Dharmadhikari (ssdharma)
+* Matrika Rohatgi (mrohatgi2)
+
 
 ## Infrastructure Setup
 
@@ -51,4 +56,3 @@ _Blue Connections_ : Deployment Paths
 * **Canary Server**
 
   Hosts the application logic to be tested viz. new feature or beta version of the application logic. The user can expected different behavior of application when the request hits the Canary Server.
-  
