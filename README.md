@@ -1,4 +1,4 @@
-# Milestone 3 - DevOps
+# Milestone 3 - DevOps - Deployment
 
 ## Team
 
