@@ -14,13 +14,13 @@ var requestfreq = {};
 var server;
 // args = ["3000"];
 // var portNum = parseInt(args[0]);
-server = app.listen(parseInt("3000"), 'localhost', function() {
+/*server = app.listen(parseInt("3000"), 'localhost', function() {
         var host = server.address().address
         var port = server.address().port
         console.log('Example app listening at http://%s:%s', host, port)
-    })
-    // REDIS SEPARATE SERVER
-    //var client = redis.createClient(6379, '52.90.252.26', {});
+    })*/
+// REDIS SEPARATE SERVER
+//var client = redis.createClient(6379, '52.90.252.26', {});
 if (process.argv.slice(2)[0]) {
     var redisip = process.argv.slice(2)[0];
     console.log(redisip);
@@ -86,7 +86,7 @@ if (process.argv.slice(2)[1] == 'clearRedis') {
             console.log('Server added to list');
         });
         // HTTP SERVER --original loc
-        /*args = ["3000"];
+        args = ["3000"];
         var portNum = parseInt(args[0]);
         var server = app.listen(portNum, 'localhost', function() {
 
@@ -94,7 +94,7 @@ if (process.argv.slice(2)[1] == 'clearRedis') {
             var port = server.address().port
 
             console.log('Example app listening at http://%s:%s', host, port)
-        })*/
+        })
 
     });
 } else {
