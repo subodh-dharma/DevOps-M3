@@ -6,8 +6,12 @@ var options = {
     range: true
 };
 var fs = require("fs");
+var path = require("path");
 
 function main() {
+
+    // reading current directory
+
     var args = process.argv.slice(2);
 
     if (args.length == 0) {
@@ -15,13 +19,26 @@ function main() {
     }
     var filePath = args[0];
 
-    complexity(filePath);
+    fs.readdir('./', function(err, files) {
+        for (f in files) {
+            if (path.extname(files[f]) === '.js') {
+                complexity(files[f]);
+                for (var node in builders) {
+                    var builder = builders[node];
+                    builder.report();
+                }
+            }
+        }
+    });
+
+
+    //complexity(filePath);
 
     // Report
-    for (var node in builders) {
-        var builder = builders[node];
-        builder.report();
-    }
+    // for (var node in builders) {
+    //     var builder = builders[node];
+    //     builder.report();
+    // }
 
 }
 
