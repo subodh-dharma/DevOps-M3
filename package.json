@@ -17,6 +17,7 @@
   "devDependencies": {
     "chai": "^3.5.0",
     "chai-http": "^3.0.0",
+    "esprima": "^3.1.1",
     "express": "^4.14.0",
     "ip": "~1.1.4",
     "mocha": "^3.1.2",
