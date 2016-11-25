@@ -4,14 +4,11 @@
   "description": "Create VM instances on AWS and Digital Ocean and deploy nginx using Ansible",
   "main": "createDOInstance.js",
   "dependencies": {
-    "aws-sdk": "~2.6.1",
     "external-ip": "^0.2.4",
     "http": "0.0.0",
     "http-proxy": "^1.15.2",
     "loadtest": "^2.2.0",
     "memory-cache": "^0.1.6",
-    "needle": "~1.1.2",
-    "sleep": "~4.0.0",
     "ssh-keygen": "~0.4.0"
   },
   "devDependencies": {
