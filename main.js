@@ -12,13 +12,17 @@ var client = {}; //default initialization
 var requestfreq = {};
 
 var server;
+
+//test purpose
 // args = ["3000"];
 // var portNum = parseInt(args[0]);
-/*server = app.listen(parseInt("3000"), 'localhost', function() {
-        var host = server.address().address
-        var port = server.address().port
-        console.log('Example app listening at http://%s:%s', host, port)
-    })*/
+// server = app.listen(parseInt("3000"), 'localhost', function() {
+//     var host = server.address().address
+//     var port = server.address().port
+//     console.log('Example app listening at http://%s:%s', host, port)
+// })
+
+
 // REDIS SEPARATE SERVER
 //var client = redis.createClient(6379, '52.90.252.26', {});
 if (process.argv.slice(2)[0]) {
@@ -83,18 +87,18 @@ if (process.argv.slice(2)[1] == 'clearRedis') {
         }, 1000);
 
         client.lpush(['canary_servers', 'http://' + ip], function(err, reply) {
-            console.log('Server added to list');
+            console.log('A Canary Server added to list');
         });
         // HTTP SERVER --original loc
-        args = ["3000"];
-        var portNum = parseInt(args[0]);
-        var server = app.listen(portNum, 'localhost', function() {
-
-            var host = server.address().address
-            var port = server.address().port
-
-            console.log('Example app listening at http://%s:%s', host, port)
-        })
+        // args = ["3000"];
+        // var portNum = parseInt(args[0]);
+        // server = app.listen(portNum, 'localhost', function() {
+        //
+        //     var host = server.address().address
+        //     var port = server.address().port
+        //
+        //     console.log('Example app listening at http://%s:%s', host, port)
+        // })
 
     });
 } else {
@@ -125,7 +129,7 @@ if (process.argv.slice(2)[1] == 'clearRedis') {
         client.llen('serving_servers', function(err, serv_count) {
             if (serv_count >= 1) {
                 client.lpush(['active_servers', 'http://' + ip], function(err, reply) {
-                    console.log('Server added to list');
+                    console.log('Active Server added to list');
                 });
             } else {
                 client.lpush(['serving_servers', 'http://' + ip], function(err, reply) {
@@ -135,9 +139,6 @@ if (process.argv.slice(2)[1] == 'clearRedis') {
         });
 
         // HTTP SERVER
-
-
-
         // args = ["3000"];
         // var portNum = parseInt(args[0]);
         // server = app.listen(portNum, 'localhost', function() {
@@ -152,6 +153,14 @@ if (process.argv.slice(2)[1] == 'clearRedis') {
 
 ///////////// WEB ROUTES
 // Add hook to make it easier to get all visited URLS.
+args = ["3000"];
+var portNum = parseInt(args[0]);
+server = app.listen(portNum, 'localhost', function() {
+    var host = server.address().address
+    var port = server.address().port
+    console.log('Example app listening at http://%s:%s', host, port)
+})
+
 
 var history = [];
 app.use(function(req, res, next) {
@@ -164,7 +173,7 @@ app.use(function(req, res, next) {
     client.lpush('queue', req.url);
     // ... INSERT HERE.
     app.get('/', function(req, res) {
-        res.send('hello world')
+        res.send('hello world!!!!')
     })
 
     app.get('/get', function(req, res) {

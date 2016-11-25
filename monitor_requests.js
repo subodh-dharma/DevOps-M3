@@ -4,43 +4,16 @@ var sendmail = require('sendmail')();
 
 
 // var ipaddress = ip.address(); // REPLACE LATER on with the
-var client = redis.createClient(6379, '52.90.252.26', {});
-
-// var args = process.argv.slice(2);
-// if (args.length == 0) {
-// args = [ipaddress];
-// }
-// ipaddress = args[0];
-
-
-// setInterval(function() {
-// client.get(ipaddress, function(error, reply) {
-
-// if (parseInt(reply.toString()) > 4) { // threshold for requests per seconds
-// console.log("MNTR: " + reply.toString());
-// console.log("OVERLOAD");
-// client.lpop('active_servers', function(err, reply) {
-// if (err) console.log(err);
-// if (reply) {
-// client.lpush('serving_servers', reply, function(error, response) {
-// console.log('Provisioned new Server!');
-// });
-// }
-
-
-// });
-// sendmail({
-// from: 'no-reply@DevOps.com',
-// to: 'ssdharma@ncsu.edu, apatel10@ncsu.edu',
-// subject: 'REQUEST OVERLOAD at ' + ipaddress,
-// html: 'Server is overloading. Please check the server at ' + ipaddress
-// }, function(err, reply) {
-
-// });
-
-// }
-// });
-// }, 200);
+var client = {};
+if (process.argv.slice(2)[0]) {
+    var redisip = process.argv.slice(2)[0];
+    console.log(redisip);
+    client = redis.createClient(6379, redisip, {});
+} else {
+    //throw Error('REDIS IP required');
+    console.warn('REDIS IP required!!', 'Connecting to REDIS on localhost if present!');
+    client = redis.createClient(6379, '127.0.0.1', {});
+}
 
 exports.reqOverload = function(ip_addr) {
 
