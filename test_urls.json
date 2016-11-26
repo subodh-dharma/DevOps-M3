@@ -1,0 +1,20 @@
+[
+ {
+   "url": "http://localhost:3000/",
+   "maxRequests": 1000,
+   "maxSeconds": 4
+ },
+ {
+   "url": "http://localhost:3000/now",
+   "maxRequests": 4000,
+   "maxSeconds": 4
+ },
+ 
+ {
+   "url": "http://localhost:3000/404",
+   "maxRequests": 8000,
+   "maxSeconds": 4
+ }
+]
+
+

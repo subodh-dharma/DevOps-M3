@@ -80,7 +80,7 @@ if (process.argv.slice(2)[1] == 'clearRedis') {
                 console.log("Request Frequency :" + requestfreq);
                 console.log("Request Overload");
                 console.log("Trying to provision a new server");
-                monitor.reqOverload('http://' + ip);
+                //monitor.reqOverload('http://' + ip);
             }
             requestfreq = 0;
             client.set(cache.get('public_ip'), requestfreq);
@@ -120,7 +120,7 @@ if (process.argv.slice(2)[1] == 'clearRedis') {
                 console.log("Request Frequency :" + requestfreq);
                 console.log("Request Overload");
                 console.log("Trying to provision a new server");
-                monitor.reqOverload('http://' + ip);
+                //monitor.reqOverload('http://' + ip);
             }
             requestfreq = 0;
             client.set(cache.get('public_ip'), requestfreq);
