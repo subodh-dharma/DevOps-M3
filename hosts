@@ -1,9 +1,9 @@
 [production]
-prod1 ansible_host=35.162.127.229
-prod2 ansible_host=52.15.112.55
+prod1 ansible_host=54.237.247.198
+prod2 ansible_host=54.237.248.241
 
 [proxy]
-proxy ansible_host=54.165.113.118
+proxy ansible_host=54.252.99.241
 
 [redis]
-redis ansible_host=52.90.252.26
+redis ansible_host=54.210.28.187
