@@ -11,8 +11,8 @@
  },
  
  {
-   "url": "http://localhost:3000/404",
-   "maxRequests": 8000,
+   "url": "http://localhost:3000/",
+   "maxRequests": 3000,
    "maxSeconds": 4
  }
 ]
