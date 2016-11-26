@@ -21,7 +21,7 @@
  {
    "url": "http://localhost:3000/",
    "maxRequests": 10000,
-   "concurrency": 10,
+   "concurrency": 5,
    "headers": { "accept": "text/plain",
  		"accept-charset": "utf-8",
   		"accept-encoding": "gzip, deflate",

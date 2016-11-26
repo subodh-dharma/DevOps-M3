@@ -9,18 +9,13 @@ var cache = require('memory-cache');
 
 var monitor = require('./monitor_requests.js');
 var client = {}; //default initialization
-var requestfreq = {};
+var requestfreq = 0;
 
 var server;
 
-//test purpose
-// args = ["3000"];
-// var portNum = parseInt(args[0]);
-// server = app.listen(parseInt("3000"), 'localhost', function() {
-//     var host = server.address().address
-//     var port = server.address().port
-//     console.log('Example app listening at http://%s:%s', host, port)
-// })
+var totalReq = 0;
+var averageReq = 0;
+var numReqSeconds = 0;
 
 
 // REDIS SEPARATE SERVER
@@ -82,6 +77,7 @@ if (process.argv.slice(2)[1] == 'clearRedis') {
                 console.log("Trying to provision a new server");
                 //monitor.reqOverload('http://' + ip);
             }
+	    //reqnum.push(requestfreq);
             requestfreq = 0;
             client.set(cache.get('public_ip'), requestfreq);
         }, 1000);
@@ -116,13 +112,23 @@ if (process.argv.slice(2)[1] == 'clearRedis') {
         cache.put('public_ip', ip);
         //COUNTING per second requests
         setInterval(function() {
-            if (requestfreq > 500) {
-                console.log("Request Frequency :" + requestfreq);
+	    /*console.log("Avg Freq: "+averageReq, 
+			"Seconds: "+numReqSeconds,
+			"Total Req: "+totalReq,
+			"Request Freq: "+requestfreq);*/
+            if (averageReq > 500) {
+                console.log("Average Frequency :" + averageReq, "For minute: "+numReqSeconds);
                 console.log("Request Overload");
                 console.log("Trying to provision a new server");
                 //monitor.reqOverload('http://' + ip);
             }
-            requestfreq = 0;
+	    if(requestfreq != 0 || totalReq!=0){
+	    	numReqSeconds++;
+	    }
+	   
+	    totalReq = totalReq + requestfreq;
+	    averageReq = totalReq/numReqSeconds;
+	    requestfreq = 0;
             client.set(cache.get('public_ip'), requestfreq);
         }, 1000);
 
