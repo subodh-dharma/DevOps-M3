@@ -6,6 +6,7 @@ var app = express()
 var exec = require('child_process').exec;
 var ip = require('ip');
 var cache = require('memory-cache');
+const os = require('os');
 
 var monitor = require('./monitor_requests.js');
 var client = {}; //default initialization
@@ -69,32 +70,23 @@ if (process.argv.slice(2)[1] == 'clearRedis') {
             throw err;
         }
         cache.put('public_ip', ip);
-        //COUNTING per second requests
         setInterval(function() {
-            if (requestfreq > 500) {
-                console.log("Request Frequency :" + requestfreq);
-                console.log("Request Overload");
-                console.log("Trying to provision a new server");
-                //monitor.reqOverload('http://' + ip);
-            }
-	    //reqnum.push(requestfreq);
+            client.hset("request_load", 'http://' + cache.get('public_ip'), requestfreq);
             requestfreq = 0;
-            client.set(cache.get('public_ip'), requestfreq);
-        }, 1000);
+        }, 20000);
+
+        setInterval(function() {
+            var freemem = os.freemem();
+            var totalmem = os.totalmem();
+            if ( totalmem && freemem && totalmem != 0)
+            {
+                client.hset("memory_load", 'http://' + cache.get('public_ip'), freemem/totalmem);
+            }
+        }, 20000);
 
         client.lpush(['canary_servers', 'http://' + ip], function(err, reply) {
             console.log('A Canary Server added to list');
         });
-        // HTTP SERVER --original loc
-        // args = ["3000"];
-        // var portNum = parseInt(args[0]);
-        // server = app.listen(portNum, 'localhost', function() {
-        //
-        //     var host = server.address().address
-        //     var port = server.address().port
-        //
-        //     console.log('Example app listening at http://%s:%s', host, port)
-        // })
 
     });
 } else {
@@ -110,29 +102,20 @@ if (process.argv.slice(2)[1] == 'clearRedis') {
             throw err;
         }
         cache.put('public_ip', ip);
-        //COUNTING per second requests
+
         setInterval(function() {
-	    /*console.log("Avg Freq: "+averageReq, 
-			"Seconds: "+numReqSeconds,
-			"Total Req: "+totalReq,
-			"Request Freq: "+requestfreq);*/
-	    // TODO : using live current request frequency, may need to change to average frequency, useful over the time.
-	    console.log("REQ FREQ :"+requestfreq, "SECONDS :"+numReqSeconds);
-            if (requestfreq > 500) {
-                console.log("Average Frequency :" + averageReq, "For minute: "+numReqSeconds);
-                console.log("Request Overload");
-                console.log("Trying to provision a new server");
-                monitor.reqOverload('http://' + ip);
+            client.hset("request_load", 'http://' + cache.get('public_ip'), requestfreq);
+            requestfreq = 0;
+        }, 20000);
+
+        setInterval(function() {
+            var freemem = os.freemem();
+            var totalmem = os.totalmem();
+            if ( totalmem && freemem && totalmem != 0)
+            {
+                client.hset("memory_load", 'http://' + cache.get('public_ip'), freemem/totalmem);
             }
-	    if(requestfreq != 0 || totalReq!=0){
-	    	numReqSeconds++;
-	    }
-	   
-	    totalReq = totalReq + requestfreq;
-	    averageReq = totalReq/numReqSeconds;
-	    requestfreq = 0;
-            client.set(cache.get('public_ip'), requestfreq);
-        }, 1000);
+        }, 20000);
 
         client.llen('serving_servers', function(err, serv_count) {
             if (serv_count >= 1) {
@@ -145,15 +128,6 @@ if (process.argv.slice(2)[1] == 'clearRedis') {
                 });
             }
         });
-
-        // HTTP SERVER
-        // args = ["3000"];
-        // var portNum = parseInt(args[0]);
-        // server = app.listen(portNum, 'localhost', function() {
-        //     var host = server.address().address
-        //     var port = server.address().port
-        //     console.log('Example app listening at http://%s:%s', host, port)
-        // })
 
     });
 }
