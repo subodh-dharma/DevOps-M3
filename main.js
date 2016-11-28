@@ -116,7 +116,8 @@ if (process.argv.slice(2)[1] == 'clearRedis') {
 			"Seconds: "+numReqSeconds,
 			"Total Req: "+totalReq,
 			"Request Freq: "+requestfreq);*/
-            if (averageReq > 500) {
+	    // TODO : using live current request frequency, may need to change to average frequency, useful over the time.
+            if (requestfreq > 500) {
                 console.log("Average Frequency :" + averageReq, "For minute: "+numReqSeconds);
                 console.log("Request Overload");
                 console.log("Trying to provision a new server");
