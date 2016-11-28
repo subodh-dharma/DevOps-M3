@@ -80,7 +80,7 @@ if (process.argv.slice(2)[1] == 'clearRedis') {
             var totalmem = os.totalmem();
             if ( totalmem && freemem && totalmem != 0)
             {
-                client.hset("memory_load", 'http://' + cache.get('public_ip'), freemem/totalmem);
+                client.hset("memory_load", 'http://' + cache.get('public_ip'), 1-(freemem/totalmem));
             }
         }, 20000);
 
@@ -113,7 +113,7 @@ if (process.argv.slice(2)[1] == 'clearRedis') {
             var totalmem = os.totalmem();
             if ( totalmem && freemem && totalmem != 0)
             {
-                client.hset("memory_load", 'http://' + cache.get('public_ip'), freemem/totalmem);
+                client.hset("memory_load", 'http://' + cache.get('public_ip'), 1-(freemem/totalmem));
             }
         }, 20000);
 
