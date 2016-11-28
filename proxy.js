@@ -17,9 +17,15 @@ if(process.argv.slice(2)[0]){
 
 var proxy = httpProxy.createProxyServer({});
 
+
 var counter = 0;
 var server = http.createServer(function(req, res){
-  counter++;
+    
+    proxy.on('proxyError', function(err, req, res){
+    	res.end();
+    });
+    
+    counter++;
     if(counter < 4)
     {
         client.rpoplpush('serving_servers', 'serving_servers', function(err, reply){
