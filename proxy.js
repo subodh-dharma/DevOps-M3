@@ -24,6 +24,11 @@ var server = http.createServer(function(req, res){
     proxy.on('proxyError', function(err, req, res){
     	res.end();
     });
+
+    proxy.on('error', function(err, req, res){
+    	console.log("ERR: \n"+err);
+	res.end();
+    });
     
     counter++;
     if(counter < 4)
