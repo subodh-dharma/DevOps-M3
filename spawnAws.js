@@ -1,5 +1,6 @@
 var AWS = require('aws-sdk');
 var exec = require('child_process').exec();
+var ansible = require('node-ansible');
 AWS.config.loadFromPath('/home/ubuntu/aws_credentials.json');
 var ec2 = new AWS.EC2();
 process.env.ANSIBLE_HOST_KEY_CHECKING = false;
@@ -11,7 +12,7 @@ var fs = require('fs');
 createInstance();
 
 //exports.createAWSInstance = function() {
- function createInstance(){ 
+function createInstance() {
     //var keyName = createKeyPair();
     var keyName = "SPAWNED_" + Math.ceil(Math.random() * (1000 - 1) + 1000);
     var pubkeyContent = fs.readFileSync('/var/lib/jenkins/.ssh/devops.pub');
@@ -78,14 +79,16 @@ createInstance();
 
                 ec2.waitFor('instanceStatusOk', params, function(err, data) {
                     console.log('Server OK..Deploying Server');
-                    exec('ansible-playbook -i ./inventory.ini ' + workspace + 'setup.yml', function(err, stdout, stderr) {
-                        console.log("ERR :" + err);
-                        console.log("OUT :" + stdout);
-                        console.log("CMDERR :" + stderr);
-                        fs.unlinkSync('./inventory.ini');
-                        console.log('inventory delted.');
-
-                    });
+                    var playbook_cmd = new ansible.Playbook().playbook('setup.yml');
+                    playbook_cmd.inventory('inventory.ini');
+                    playbook_cmd.exec();
+                    // exec('ansible-playbook -i ./inventory.ini setup.yml', function(err, stdout, stderr) {
+                    //     console.log("ERR :" + err);
+                    //     console.log("OUT :" + stdout);
+                    //     console.log("CMDERR :" + stderr);
+                    //     fs.unlinkSync('./inventory.ini');
+                    //     console.log('inventory deleted.');
+                    // });
                 });
 
 
@@ -100,7 +103,7 @@ createInstance();
 
 
 function writeInventoryFile(ssh_host) {
-    var home_path = '/home/ubuntu/.ssh/';
+    var home_path = '/var/lib/jenkins/.ssh/';
     var file_path = "./inventory.ini";
     var fs = require('fs');
     var writeString = "prod ansible_ssh_host=";
