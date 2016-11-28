@@ -120,7 +120,7 @@ if (process.argv.slice(2)[1] == 'clearRedis') {
                 console.log("Average Frequency :" + averageReq, "For minute: "+numReqSeconds);
                 console.log("Request Overload");
                 console.log("Trying to provision a new server");
-                //monitor.reqOverload('http://' + ip);
+                monitor.reqOverload('http://' + ip);
             }
 	    if(requestfreq != 0 || totalReq!=0){
 	    	numReqSeconds++;

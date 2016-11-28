@@ -30,7 +30,7 @@ exports.reqOverload = function(ip_addr) {
 
 
     });
-    console.log("HELLO");
+    console.log("Handling REQ_OVERLOAD");
 };
 
 function sendDetails(message, ip_addr) {
