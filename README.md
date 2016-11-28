@@ -16,7 +16,7 @@
 <br>
 ![Infrastructure Setup](./img/infrastructure.PNG)
 
-**Legend**
+**Legendd**
 
 _Blue Connections_ : Deployment Paths
 <br>_Red Connections_ : Production Communication Paths
