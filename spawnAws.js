@@ -6,7 +6,7 @@ process.env.ANSIBLE_HOST_KEY_CHECKING = false;
 var instance_ID = "";
 var instance_status = 0;
 var workspace = '/var/lib/jenkins/workspace/AppServers/';
-
+var fs = require('fs');
 
 createInstance();
 
