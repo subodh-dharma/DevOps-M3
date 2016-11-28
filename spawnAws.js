@@ -6,9 +6,12 @@ process.env.ANSIBLE_HOST_KEY_CHECKING = false;
 var instance_ID = "";
 var instance_status = 0;
 var workspace = '/var/lib/jenkins/workspace/AppServers/';
-//createInstance();
 
-exports.createAWSInstance = function() {
+
+createInstance();
+
+//exports.createAWSInstance = function() {
+ function createInstance(){ 
     //var keyName = createKeyPair();
     var keyName = "SPAWNED_" + Math.ceil(Math.random() * (1000 - 1) + 1000);
     var pubkeyContent = fs.readFileSync('/home/ubuntu/.ssh/devops.pub');
