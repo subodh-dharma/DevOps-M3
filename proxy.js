@@ -22,7 +22,7 @@ var counter = 0;
 var server = http.createServer(function(req, res){
     
 
-    proxy.on('error', function(err, req, res){
+    proxy.on('proxyError', function(err, req, res){
     	console.log("ERR: \n"+err);
 	res.end();
     });
