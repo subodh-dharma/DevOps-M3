@@ -14,7 +14,7 @@ createInstance();
  function createInstance(){ 
     //var keyName = createKeyPair();
     var keyName = "SPAWNED_" + Math.ceil(Math.random() * (1000 - 1) + 1000);
-    var pubkeyContent = fs.readFileSync('/home/ubuntu/.ssh/devops.pub');
+    var pubkeyContent = fs.readFileSync('/var/lib/jenkins/.ssh/devops.pub');
     var params = {
         //KeyName: 'AWS_' + Math.ceil(Math.random() * 1000).toString(),
         KeyName: keyName,
