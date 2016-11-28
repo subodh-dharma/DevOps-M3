@@ -1,0 +1,34 @@
+[
+ {
+   "url": "http://localhost:3000/",
+   "maxRequests": 5000,
+   "concurrency": 10,
+   "requestsPerSecond": 800
+ },
+ {
+   "url": "http://localhost:3000/now",
+   "maxRequests": 4000,
+   "concurrency": 5,
+   "requestsPerSecond": 300
+   
+ },
+ {
+   "url": "http://localhost:3000/404",
+   "maxRequests": 1000,
+   "concurrency": 4,
+   "requestsPerSecond": 200
+ },
+ {
+   "url": "http://localhost:3000/",
+   "maxRequests": 10000,
+   "concurrency": 5,
+   "headers": { "accept": "text/plain",
+ 		"accept-charset": "utf-8",
+  		"accept-encoding": "gzip, deflate",
+		"cache-control": "no-cache"
+	      },
+   "requestsPerSecond": 700
+ }
+]
+
+
