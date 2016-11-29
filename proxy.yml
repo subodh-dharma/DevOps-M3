@@ -3,6 +3,9 @@
   user: ubuntu
   gather_facts: False
   pre_tasks:
+  
+  - name: Updating
+    raw: sudo apt-get update
   - name: Install python2
     raw: sudo apt-get -y install python-simplejson
 
