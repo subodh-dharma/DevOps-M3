@@ -118,15 +118,9 @@ if (process.argv.slice(2)[1] == 'clearRedis') {
         }, 20000);
 
         client.llen('serving_servers', function(err, serv_count) {
-            if (serv_count >= 1) {
-                client.lpush(['active_servers', 'http://' + ip], function(err, reply) {
-                    console.log('Active Server added to list');
-                });
-            } else {
-                client.lpush(['serving_servers', 'http://' + ip], function(err, reply) {
-                    console.log('Server adding to serving list');
-                });
-            }
+            client.lpush(['serving_servers', 'http://' + ip], function(err, reply) {
+                console.log('Server adding to serving list');
+            });
         });
 
     });
