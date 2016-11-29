@@ -79,6 +79,12 @@ setInterval(function(){
             }
         })
     });
+    client.hgetall('request_load', function(err, reply){
+        Object.keys(reply).forEach(function(key){
+            client.hset('request_load', key, 0);
+        });
+    })
+
 }, 20000);
 
 setInterval(function(){
@@ -104,6 +110,14 @@ setInterval(function(){
             }
         })
     });
+
+            //deleting hash-sets
+    client.hgetall('memory_load', function(err, reply){
+        Object.keys(reply).forEach(function(key){
+            client.hset('memory_load', key, 0);
+        });
+    })
+
 },20000);
 
 //create express app
