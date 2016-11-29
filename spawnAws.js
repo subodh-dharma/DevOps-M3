@@ -11,21 +11,14 @@ var instance_status = 0;
 var workspace = '/var/lib/jenkins/workspace/AppServers/';
 var fs = require('fs');
 
+// function to create an AWS instance and update redis-store
+exports.createAWSInstance = function(redisipaddr) {
 
-createInstance();
-// TODO pass redis ip as parameters, this function will be called by monitors.
-//exports.createAWSInstance = function() {
-function createInstance() {
+    var redisip = redisipaddr;
     var client = {};
-    if (process.argv.slice(2)[0]) {
-        var redisip = process.argv.slice(2)[0];
-        console.log(redisip);
-        client = redis.createClient(6379, redisip, {});
-    } else {
-        //throw Error('REDIS IP required');
-        console.warn('REDIS IP required!!', 'Connecting to REDIS on localhost if present!');
-        client = redis.createClient(6379, '127.0.0.1', {});
-    }
+
+    console.log(redisip);
+    client = redis.createClient(6379, redisip, {});
 
     //var keyName = createKeyPair();
     var keyName = "SPAWNED_" + Math.ceil(Math.random() * (1000 - 1) + 1000);

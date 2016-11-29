@@ -9,19 +9,13 @@ var instance_status = 0;
 var workspace = '/var/lib/jenkins/workspace/AppServers/';
 var fs = require('fs');
 
-terminateInstance();
 
-function terminateInstance() {
+// deletes AWS instance and updates redis-store
+exports.terminateAWSInstance = function(redisipaddr) {
     var client = {};
-    if (process.argv.slice(2)[0]) {
-        var redisip = process.argv.slice(2)[0];
-        console.log(redisip);
-        client = redis.createClient(6379, redisip, {});
-    } else {
-        //throw Error('REDIS IP required');
-        console.warn('REDIS IP required!!', 'Connecting to REDIS on localhost if present!');
-        client = redis.createClient(6379, '127.0.0.1', {});
-    }
+    var redisip = redisipaddr;
+    console.log(redisip);
+    client = redis.createClient(6379, redisip, {});
 
     client.lpop('aws_instanceid', function(err, reply) {
         var params = {
@@ -37,6 +31,9 @@ function terminateInstance() {
                 console.log(pub_ip + ' removed from serving list');
                 console.log('Terminating aws instance!');
 
+                client.hset("memory_load", 'http://' + pub_ip, 0);
+                client.hset("request_load", 'http://' + pub_ip, 0);
+
                 var param = {
                     InstanceIds: [
                         reply
@@ -46,6 +43,7 @@ function terminateInstance() {
                 ec2.terminateInstances(param, function(error, datareply) {
                     if (error) console.log(error); // an error occurred
                     else {
+
                         console.log("Instance Terminated Succesfully!!"); // successful response
 
                     }
