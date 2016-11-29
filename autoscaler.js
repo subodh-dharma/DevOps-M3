@@ -31,15 +31,16 @@ setInterval(
                 });
 
                 for (val in object) {
-                    console.log(object[val]);
+                    var numRequest = object[val];
+                    console.log(numRequest);
                     //upscaling
-                    if (object[val] >= 1000) {
+                    if (numRequest >= 500) {
                         upscaling = true;
                         break;
                     }
 
                     if (aws_instance_cnt > 0) {
-                        if (object[val] <= 300) {
+                        if (numRequest <= 300) {
                             downscaling = true;
                         } else {
                             downscaling = false;
@@ -134,5 +135,5 @@ setInterval(
         })
 
     },
-    50000
+    20000
 );
