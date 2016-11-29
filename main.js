@@ -132,7 +132,7 @@ if (process.argv.slice(2)[1] == 'clearRedis') {
 // Add hook to make it easier to get all visited URLS.
 args = ["3000"];
 var portNum = parseInt(args[0]);
-server = app.listen(portNum, 'localhost', function() {
+server = app.listen(portNum, function() {
     var host = server.address().address
     var port = server.address().port
     console.log('Example app listening at http://%s:%s', host, port)
