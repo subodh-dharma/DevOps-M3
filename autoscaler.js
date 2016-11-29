@@ -34,18 +34,18 @@ setInterval(
                     var numRequest = object[val];
                     console.log(numRequest);
                     //upscaling
-                    if (numRequest >= 500) {
+                    if (numRequest >= 300) {
                         upscaling = true;
                         break;
                     }
 
-                    if (aws_instance_cnt > 0) {
-                        if (numRequest <= 300) {
-                            downscaling = true;
-                        } else {
-                            downscaling = false;
-                        }
-                    }
+                    // if (aws_instance_cnt > 0) {
+                    //     if (numRequest <= 300) {
+                    //         downscaling = true;
+                    //     } else {
+                    //         downscaling = false;
+                    //     }
+                    // }
                 }
 
                 if (upscaling) {
@@ -57,62 +57,62 @@ setInterval(
                     });
                 }
 
-                if (downscaling) {
-                    sleep = true;
-                    despawnAWS.terminateAWSInstance(redisip, function() {
-                        console.log('Existing server removed!');
-                        sleep = false;
-                        downscaling = false;
-                    });
-                }
+                // if (downscaling) {
+                //     sleep = true;
+                //     despawnAWS.terminateAWSInstance(redisip, function() {
+                //         console.log('Existing server removed!');
+                //         sleep = false;
+                //         downscaling = false;
+                //     });
+                // }
 
 
                 //downscaling
             });
 
-            client.hgetall('memory_load', function(err, object) {
-                //console.log(object);
-                var aws_instance_cnt = 0;
+            // client.hgetall('memory_load', function(err, object) {
+            //     //console.log(object);
+            //     var aws_instance_cnt = 0;
 
-                client.llen('aws_instanceid', function(err, cnt) {
-                    aws_instance_cnt = cnt;
-                });
+            //     client.llen('aws_instanceid', function(err, cnt) {
+            //         aws_instance_cnt = cnt;
+            //     });
 
-                for (val in object) {
-                    console.log(object[val]);
-                    //upscaling
-                    if (object[val] >= 0.80) {
-                        upscaling = true;
-                        break;
-                    }
+            //     for (val in object) {
+            //         console.log(object[val]);
+            //         //upscaling
+            //         if (object[val] >= 0.80) {
+            //             upscaling = true;
+            //             break;
+            //         }
 
-                    if (aws_instance_cnt > 0) {
-                        if (object[val] <= 0.30) {
-                            downscaling = true;
-                        } else {
-                            downscaling = false;
-                        }
-                    }
-                }
+            //         if (aws_instance_cnt > 0) {
+            //             if (object[val] <= 0.30) {
+            //                 downscaling = true;
+            //             } else {
+            //                 downscaling = false;
+            //             }
+            //         }
+            //     }
 
-                if (upscaling) {
-                    sleep = true;
-                    spawnAWS.createAWSInstance(redisip, function() {
-                        console.log('New Server Provisioned!');
-                        sleep = false;
-                        upscaling = false;
-                    });
-                }
+            //     if (upscaling) {
+            //         sleep = true;
+            //         spawnAWS.createAWSInstance(redisip, function() {
+            //             console.log('New Server Provisioned!');
+            //             sleep = false;
+            //             upscaling = false;
+            //         });
+            //     }
 
-                if (downscaling) {
-                    sleep = true;
-                    despawnAWS.terminateAWSInstance(redisip, function() {
-                        console.log('Existing server removed!');
-                        sleep = false;
-                        downscaling = false;
-                    });
-                }
-            });
+            //     if (downscaling) {
+            //         sleep = true;
+            //         despawnAWS.terminateAWSInstance(redisip, function() {
+            //             console.log('Existing server removed!');
+            //             sleep = false;
+            //             downscaling = false;
+            //         });
+            //     }
+            // });
         } else {
 
             console.log('Rescaling initiated');
