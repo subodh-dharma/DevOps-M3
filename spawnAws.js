@@ -1,6 +1,7 @@
 var AWS = require('aws-sdk');
 var exec = require('child_process').exec();
 var ansible = require('node-ansible');
+var redis = require('redis');
 AWS.config.loadFromPath('/home/ubuntu/aws_credentials.json');
 var ec2 = new AWS.EC2();
 process.env.ANSIBLE_HOST_KEY_CHECKING = false;
@@ -9,10 +10,22 @@ var instance_status = 0;
 var workspace = '/var/lib/jenkins/workspace/AppServers/';
 var fs = require('fs');
 
-createInstance();
 
+createInstance();
+// TODO pass redis ip as parameters, this function will be called by monitors.
 //exports.createAWSInstance = function() {
 function createInstance() {
+    var client = {};
+    if (process.argv.slice(2)[0]) {
+        var redisip = process.argv.slice(2)[0];
+        console.log(redisip);
+        client = redis.createClient(6379, redisip, {});
+    } else {
+        //throw Error('REDIS IP required');
+        console.warn('REDIS IP required!!', 'Connecting to REDIS on localhost if present!');
+        client = redis.createClient(6379, '127.0.0.1', {});
+    }
+
     //var keyName = createKeyPair();
     var keyName = "SPAWNED_" + Math.ceil(Math.random() * (1000 - 1) + 1000);
     var pubkeyContent = fs.readFileSync('/var/lib/jenkins/.ssh/devops.pub');
@@ -56,6 +69,7 @@ function createInstance() {
                 };
 
                 var pub_ip;
+
                 ec2.waitFor('instanceRunning', params, function(err, data) {
                     if (err) console.log(err, err.stack); // an error occurred
                     else {
@@ -70,6 +84,7 @@ function createInstance() {
                                 Value: 'SpawnedServer'
                             }]
                         };
+
                         writeInventoryFile(pub_dns);
                         ec2.createTags(params, function(err) {
                             console.log("Tagging instance", err ? "failure" : "success");
@@ -79,16 +94,27 @@ function createInstance() {
 
                 ec2.waitFor('instanceStatusOk', params, function(err, data) {
                     console.log('Server OK..Deploying Server');
+
+                    // making entry in redis-store to load-balance
+
                     var playbook_cmd = new ansible.Playbook().playbook('setup.yml');
                     playbook_cmd.inventory('inventory.ini');
+                    playbook_cmd.on('stdout', function(data) {
+                        console.log(data.toString());
+                    });
+                    playbook_cmd.on('stderr', function(data) {
+                        console.log(data.toString());
+                    });
                     playbook_cmd.exec();
-                    // exec('ansible-playbook -i ./inventory.ini setup.yml', function(err, stdout, stderr) {
-                    //     console.log("ERR :" + err);
-                    //     console.log("OUT :" + stdout);
-                    //     console.log("CMDERR :" + stderr);
-                    //     fs.unlinkSync('./inventory.ini');
-                    //     console.log('inventory deleted.');
-                    // });
+
+                    client.lpush(['serving_servers', 'http://' + pub_ip], function(err, reply) {
+                        console.log('Adding to load-balance')
+                    });
+
+                    client.lpush(['aws_instanceid', instance_ID], function(err, reply) {
+                        console.log('Adding to instance id list');
+                    });
+
                 });
 
 
