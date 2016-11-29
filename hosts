@@ -6,4 +6,4 @@ prod2 ansible_host=54.237.248.241
 proxy ansible_host=54.252.99.241
 
 [redis]
-redis ansible_host=54.210.28.187
+redis ansible_host=107.23.244.214
