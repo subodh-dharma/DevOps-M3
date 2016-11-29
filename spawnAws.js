@@ -8,7 +8,6 @@ process.env.ANSIBLE_HOST_KEY_CHECKING = false;
 var instance_ID = "";
 var pub_ip = "";
 var instance_status = 0;
-var workspace = '/var/lib/jenkins/workspace/AppServers/';
 var fs = require('fs');
 
 // function to create an AWS instance and update redis-store
