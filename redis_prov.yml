@@ -45,9 +45,6 @@
   - name: Creating Logs file setup - graph plotter
     file: path=/home/graph/logs state=directory
 
-  - name: Creating Logs file setup - autoscaler
-    file: path=/home/autoscaler/logs state=directory
-
   - name: Installing Server Software
     shell: npm --prefix /home/graph install
 
@@ -78,4 +75,4 @@
     command: forever --workingDir /home/graph start -l /home/graph/logs/forever.log -o /home/graph/logs/out.log -e /home/graph/logs/err.log /home/graph/plotgraph.js {{hostvars['redis']['ansible_host']}}
 
   - name: Starting Auto-Scaler
-    command: forever start -l /home/autoscaler/logs/forever.log -o /home/autoscaler/logs/out.log -e /home/autoscaler/logs/err.log autoscaler.js {{hostvars['redis']['ansible_host']}}
+    command: forever --workingDir /home/graph start -l /home/graph/logs/forever1.log -o /home/graph/logs/out1.log -e /home/graph/logs/err1.log  /home/graph/autoscaler.js {{hostvars['redis']['ansible_host']}}
