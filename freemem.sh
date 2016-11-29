@@ -1,4 +1,5 @@
 #!/bin/bash
 
 echo "Freeing Up Memory"
-sudo sysctl -w vm.drop_cache=3
+sudo sysctl -w vm.drop_caches=3
+sudo rm -rf /tmp/*

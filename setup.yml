@@ -3,8 +3,8 @@
   user: ubuntu
   gather_facts: False
   pre_tasks:
-  
-  - name: Updating 
+
+  - name: Updating
     raw: apt-get update
 
   - name: Install python2
@@ -23,7 +23,7 @@
 
   - name: Install git
     apt: pkg=git state=installed update_cache=yes
-  
+
   - name: Install Stress package for stress testing
     apt: pkg=stress state=installed update_cache=yes
 
@@ -42,10 +42,10 @@
 
   - name: Create Log files setup
     file: path=/home/production/logs state=directory
-  
+
   - name: Installing Server Software
     shell: npm --prefix /home/production install
-  
+
   - name: Stop all forever processes
     raw: forever stopall
 

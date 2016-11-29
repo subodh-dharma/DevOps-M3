@@ -19,11 +19,11 @@ loadtest.loadTest(options[1], function(error, result)
 
 loadtest.loadTest(options[2], function(error, result)
 {
-    if(error){ console.log("/now "+ error);}
-    console.log('Load Test for /now');
+    if(error){ console.log("/404 "+ error);}
+    console.log('Load Test for /404');
 });
 
-loadtest.loadTest(options[3], function(error, result)
+loadtest.loadTest(options[1], function(error, result)
 {
     if(error){ console.log("/ with headers "+ error);}
     console.log('Load Test for / with headers');
