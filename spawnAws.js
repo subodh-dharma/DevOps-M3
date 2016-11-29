@@ -86,7 +86,7 @@ function createInstance() {
                             }]
                         };
 
-                        writeInventoryFile(pub_dns);
+                        writeInventoryFile(pub_ip);
                         ec2.createTags(params, function(err) {
                             console.log("Tagging instance", err ? "failure" : "success");
                         });
