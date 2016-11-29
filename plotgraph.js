@@ -97,10 +97,10 @@ setInterval(function(){
         Object.keys(obj).forEach(function(key){
             if(!server_list[key]){
                 server_list[key] = new Array(time_list.length-1).fill({"value": 0});
-                server_list[key].push({"value": obj[key]});
+                server_list[key].push({"value": Math.round(obj[key]*10000)/100});
             }
             else {
-                server_list[key].push({"value": obj[key]});
+                server_list[key].push({"value": Math.round(obj[key]*10000)/100});
             }
         })
     });

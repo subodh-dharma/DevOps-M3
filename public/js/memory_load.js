@@ -3,14 +3,14 @@ var chartData;
 $(function(){
   $.ajax({
 
-    url: 'http://localhost:3300/getData',
+    url: 'http://107.23.244.214:3300/getData',
     type: 'GET',
     success : function(data) {
 
       var chartProperties = {
         "caption": "Variation of Memory Load",
         "xAxisName": "Time",
-        "yAxisName": "Memory Usage Ratio (Used memory/Total memory)"
+        "yAxisName": "Memory Usage Ratio Percentage (Used memory/Total memory)"
       };
 
       var categoriesArray = [{

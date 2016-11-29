@@ -22,7 +22,7 @@ exports.createAWSInstance = function(redisipaddr) {
 
     //var keyName = createKeyPair();
     var keyName = "SPAWNED_" + Math.ceil(Math.random() * (1000 - 1) + 1000);
-    var pubkeyContent = fs.readFileSync('/var/lib/jenkins/.ssh/devops.pub');
+    var pubkeyContent = fs.readFileSync('/var/lib/aws/devops.pub');
     var params = {
         //KeyName: 'AWS_' + Math.ceil(Math.random() * 1000).toString(),
         KeyName: keyName,
@@ -119,10 +119,11 @@ exports.createAWSInstance = function(redisipaddr) {
 
 
 function writeInventoryFile(ssh_host) {
-    var home_path = '/var/lib/jenkins/.ssh/';
+    var home_path = '/var/lib/aws/';
     var file_path = "./inventory.ini";
     var fs = require('fs');
-    var writeString = "prod ansible_ssh_host=";
+    var writeString = "[prod]\n"
+    writeString = writeString + "prod ansible_ssh_host=";
     writeString = writeString + ssh_host;
     writeString = writeString + " ansible_ssh_user=ubuntu"; //user-name for login
     writeString = writeString + " ansible_ssh_private_key_file=";
@@ -130,6 +131,7 @@ function writeInventoryFile(ssh_host) {
     writeString = writeString + "\n";
 
     //redis entry
+    writeString = writeString + "[redis]\n"
     writeString = writeString + "redis ansible_host=";
     writeString = writeString + process.argv.slice(2)[0];
 
