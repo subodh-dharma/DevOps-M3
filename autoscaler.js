@@ -121,19 +121,6 @@ setInterval(
 
         }
 
-        //deleting hash-sets
-        client.hgetall('memory_load', function(err, reply){
-            Object.keys(reply).forEach(function(key){
-                client.hset('memory_load', key, 0);
-            });
-        })
-
-        client.hgetall('request_load', function(err, reply){
-            Object.keys(reply).forEach(function(key){
-                client.hset('request_load', key, 0);
-            });
-        })
-
     },
-    20000
+    1000
 );
