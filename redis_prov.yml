@@ -3,6 +3,10 @@
   user: ubuntu
   gather_facts: False
   pre_tasks:
+
+  - name: Updates
+    raw: apt-get update
+
   - name: Install python2
     raw: sudo apt-get -y install python-simplejson
 
@@ -11,11 +15,41 @@
 
   tasks:
 
+  - name: Install NodeJS
+    apt: pkg=nodejs state=installed update_cache=yes
+
+  - name: Install npm
+    apt: pkg=npm state=installed update_cache=yes
+
+  - name: Install git
+    apt: pkg=git state=installed update_cache=yes
+
   - name: Install build essentials
     apt: pkg=build-essential state=installed update_cache=yes
 
   - name: Install tcl
     apt: pkg=tcl state=installed update_cache=yes
+
+  - name: Resolving node and nodejs
+    command: ln -s /usr/bin/nodejs /usr/bin/node creates=/usr/bin/node
+
+  - name: Install forever
+    shell: npm install forever -g
+
+  - name: Copying Server Software
+    git: repo=https://github.com/subodh-dharma/DevOps-M3.git dest=/home/graph version=redis
+
+  - name: Creating Logs file setup
+    file: path=/home/graph/logs state=directory
+
+  - name: Installing Server Software
+    shell: npm --prefix /home/graph install
+
+  - name: Stop all forever processes
+    raw: forever stopall
+
+  - name: Starting Web Server
+    command: forever start -l /home/graph/logs/forever.log -o /home/graph/logs/out.log -e /home/graph/logs/err.log /home/graph/plotgraph.js {{hostvars['redis']['ansible_host']}}
 
   - name: Get redis
     get_url:
