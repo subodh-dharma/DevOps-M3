@@ -3,7 +3,7 @@ var chartData;
 $(function(){
   $.ajax({
 
-    url: 'http://localhost:3300/getData',
+    url: 'http://107.23.244.214:3300/getData',
     type: 'GET',
     success : function(data) {
 

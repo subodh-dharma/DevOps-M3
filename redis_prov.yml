@@ -72,5 +72,5 @@
     service: name=redis state=restarted
 
   - name: Starting Web Server
-    command: forever start -l /home/graph/logs/forever.log -o /home/graph/logs/out.log -e /home/graph/logs/err.log /home/graph/plotgraph.js {{hostvars['redis']['ansible_host']}}
+    command: forever --workingDir /home/graph start -l /home/graph/logs/forever.log -o /home/graph/logs/out.log -e /home/graph/logs/err.log /home/graph/plotgraph.js {{hostvars['redis']['ansible_host']}}
 
