@@ -77,7 +77,7 @@ function createInstance() {
                         //get public-dns name;
                         console.log('New Machine Spawned, Waiting for access!');
                         var pub_dns = data.Reservations[0].Instances[0].PublicDnsName;
-                        pub_ip = data.Reservations[0].Instances[0].PublicIp;
+                        pub_ip = data.Reservations[0].Instances[0].PublicIpAddress;
                         params = {
                             Resources: [instanceId],
                             Tags: [{
