@@ -10,7 +10,7 @@ $(function(){
       var chartProperties = {
         "caption": "Variation of Memory Load",
         "xAxisName": "Time",
-        "yAxisName": "Memory Usage Ratio (Used memory/Total memory)"
+        "yAxisName": "Memory Usage Ratio Percentage (Used memory/Total memory)"
       };
 
       var categoriesArray = [{
