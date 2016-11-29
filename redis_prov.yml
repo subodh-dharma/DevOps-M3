@@ -48,9 +48,6 @@
   - name: Stop all forever processes
     raw: forever stopall
 
-  - name: Starting Web Server
-    command: forever start -l /home/graph/logs/forever.log -o /home/graph/logs/out.log -e /home/graph/logs/err.log /home/graph/plotgraph.js {{hostvars['redis']['ansible_host']}}
-
   - name: Get redis
     get_url:
       url: http://download.redis.io/releases/redis-3.2.5.tar.gz
@@ -70,3 +67,7 @@
 
   - name: Start redis service
     service: name=redis state=restarted
+
+  - name: Starting Web Server
+    command: forever start -l /home/graph/logs/forever.log -o /home/graph/logs/out.log -e /home/graph/logs/err.log /home/graph/plotgraph.js {{hostvars['redis']['ansible_host']}}
+
