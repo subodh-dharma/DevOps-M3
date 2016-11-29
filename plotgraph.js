@@ -59,6 +59,17 @@ function getReqData(responseObj){
 
 }
 
+function clearRedis(){
+    client.del("request_load",  function(){
+        console.log("Request load cleared");
+    })
+    client.del("memory_load", function(){
+        console.log("Memory load cleared");
+    })
+}
+
+
+
 setInterval(function(){
     var now = new Date();
     var time = dateFormat(now);
@@ -151,6 +162,8 @@ app.get("/memory_chart", function(req, res){
   res.render("chart");
 });
 
+
 app.listen("3300", function(){
+  clearRedis();
   console.log('Server up: http://localhost:3300');
 });
