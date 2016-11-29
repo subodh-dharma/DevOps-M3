@@ -108,10 +108,6 @@ function createInstance() {
                     });
                     playbook_cmd.exec();
 
-                    client.lpush(['serving_servers', 'http://' + pub_ip], function(err, reply) {
-                        console.log('Adding to load-balance')
-                    });
-
                     client.lpush(['aws_instanceid', instance_ID], function(err, reply) {
                         console.log('Adding to instance id list');
                     });
@@ -139,6 +135,10 @@ function writeInventoryFile(ssh_host) {
     writeString = writeString + " ansible_ssh_private_key_file=";
     writeString = writeString + home_path + "devops.pem";
     writeString = writeString + "\n";
+
+    //redis entry
+    writeString = writeString + "redis ansible_host=";
+    writeString = writeString + process.argv.slice(2)[0];
 
     fs.appendFile(file_path, writeString, function(err) {
         if (err) {
