@@ -6,6 +6,7 @@ AWS.config.loadFromPath('/home/ubuntu/aws_credentials.json');
 var ec2 = new AWS.EC2();
 process.env.ANSIBLE_HOST_KEY_CHECKING = false;
 var instance_ID = "";
+var pub_ip = "";
 var instance_status = 0;
 var workspace = '/var/lib/jenkins/workspace/AppServers/';
 var fs = require('fs');
@@ -68,7 +69,7 @@ function createInstance() {
                     ]
                 };
 
-                var pub_ip;
+
 
                 ec2.waitFor('instanceRunning', params, function(err, data) {
                     if (err) console.log(err, err.stack); // an error occurred
@@ -97,7 +98,7 @@ function createInstance() {
 
                     // making entry in redis-store to load-balance
 
-                    var playbook_cmd = new ansible.Playbook().playbook('setup.yml');
+                    var playbook_cmd = new ansible.Playbook().playbook('setup');
                     playbook_cmd.inventory('inventory.ini');
                     playbook_cmd.on('stdout', function(data) {
                         console.log(data.toString());
