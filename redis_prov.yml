@@ -42,8 +42,11 @@
   - name: Copying Server Software
     git: repo=https://github.com/subodh-dharma/DevOps-M3.git dest=/home/graph version=redis
 
-  - name: Creating Logs file setup
+  - name: Creating Logs file setup - graph plotter
     file: path=/home/graph/logs state=directory
+
+  - name: Creating Logs file setup - autoscaler
+    file: path=/home/autoscaler/logs state=directory
 
   - name: Installing Server Software
     shell: npm --prefix /home/graph install
@@ -74,3 +77,5 @@
   - name: Starting Web Server
     command: forever start -l /home/graph/logs/forever.log -o /home/graph/logs/out.log -e /home/graph/logs/err.log /home/graph/plotgraph.js {{hostvars['redis']['ansible_host']}}
 
+  - name: Starting Auto-Scaler
+    command: forever start -l /home/autoscaler/logs/forever.log -o /home/autoscaler/logs/out.log -e /home/autoscaler/logs/err.log autoscaler.js {{hostvars['redis']['ansible_host']}}
