@@ -32,8 +32,8 @@ function terminateInstance() {
         }
         ec2.describeInstances(params, function(err, data) {
             console.log('Removing excess server.');
-            var pub_ip = data.Instances[0].PublicIpAddress;
-            client.lrem('serving_servers', 0, pub_ip, function(err1, data1) {
+            var pub_ip = data.Reservations[0].Instances[0].PublicIpAddress;
+            client.lrem('serving_servers', 0, "http://" + pub_ip, function(err1, data1) {
                 console.log(pub_ip + ' removed from serving list');
                 console.log('Terminating aws instance!');
 
@@ -44,9 +44,9 @@ function terminateInstance() {
                     DryRun: false
                 };
                 ec2.terminateInstances(param, function(error, datareply) {
-                    if (error) console.log(error, err.stack); // an error occurred
+                    if (error) console.log(error); // an error occurred
                     else {
-                        console.log("Intance Terminated Succesfully!!"); // successful response
+                        console.log("Instance Terminated Succesfully!!"); // successful response
 
                     }
                 });
