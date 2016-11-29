@@ -119,6 +119,16 @@ setInterval(
             if (downscaling) console.log('Deprovisioning Server!');
 
         }
+
+        //deleting hash-sets
+        client.del('memory_load', function(error, reply) {
+            console.log(error, reply);
+        });
+
+        client.del('request_load', function(error, reply) {
+
+        });
+
     },
     10000
 );
