@@ -77,7 +77,7 @@ setInterval(function(){
             else {
                 req_server_list[key].push({"value": obj[key]});
             }
-        })    
+        })
     });
 }, 20000);
 
@@ -103,7 +103,7 @@ setInterval(function(){
                 server_list[key].push({"value": obj[key]});
             }
         })
-    });    
+    });
 },20000);
 
 //create express app
@@ -119,7 +119,7 @@ app.set('view engine', 'handlebars');
 
 //Defining middleware to serve static files
 app.use('/public', express.static('public'));
-app.get("/fuelPrices", function(req, res){
+app.get("/getData", function(req, res){
   getData(res);
 });
 
@@ -130,8 +130,8 @@ app.get("/reqData", function(req, res){
 app.get("/request_chart", function(req, res){
     app.engine('handlebars', exphbs({defaultLayout: 'req'}));
     res.render("chart");
-})
-  
+});
+
 app.get("/memory_chart", function(req, res){
   app.engine('handlebars', exphbs({defaultLayout: 'main'}));
   res.render("chart");
