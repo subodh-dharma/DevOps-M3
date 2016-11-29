@@ -17,7 +17,7 @@ exports.createAWSInstance = function(redisipaddr) {
     var client = {};
 
     console.log(redisip);
-    client = redis.createClient(6379, redisip, {});
+    client = redis.createClient(6379, redisipaddr, {});
 
     //var keyName = createKeyPair();
     var keyName = "SPAWNED_" + Math.ceil(Math.random() * (1000 - 1) + 1000);

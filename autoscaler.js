@@ -1,6 +1,7 @@
 var redis = require('redis');
 var spawnAWS = require('./spawnAws.js');
 var despawnAWS = require('./despawnAws.js');
+var cache = require('memory-cache');
 
 var client = {};
 var redisip = '';
@@ -11,6 +12,7 @@ var sleep = false;
 if (process.argv.slice(2)[0]) {
     redisip = process.argv.slice(2)[0];
     console.log(redisip);
+    cache.put('redis_ip', redisip);
     client = redis.createClient(6379, redisip, {});
 } else {
     //throw Error('REDIS IP required');
@@ -50,7 +52,7 @@ setInterval(
 
                 if (upscaling) {
                     sleep = true;
-                    spawnAWS.createAWSInstance(redisip, function() {
+                    spawnAWS.createAWSInstance(cache.get('redis_ip'), function() {
                         console.log('New Server Provisioned!');
                         sleep = false;
                         upscaling = false;
