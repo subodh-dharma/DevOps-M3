@@ -104,9 +104,15 @@ if (process.argv.slice(2)[1] == 'clearRedis') {
         cache.put('public_ip', ip);
 
         setInterval(function() {
-            console.log("Number of requests per second: " + requestfreq);
-            client.hset("request_load", 'http://' + cache.get('public_ip'), requestfreq);
-            requestfreq = 0;
+
+            client.hget("request_load", 'http://' + cache.get('public_ip'), function(err, reply){
+                if(reply < requestfreq || reply == null)
+                {
+                    console.log("in here");
+                    client.hset("request_load", 'http://' + cache.get('public_ip'), requestfreq);
+                }
+                requestfreq = 0;
+            })
         }, 1000);
 
         setInterval(function() {
@@ -114,7 +120,13 @@ if (process.argv.slice(2)[1] == 'clearRedis') {
             var totalmem = os.totalmem();
             if ( totalmem && freemem && totalmem != 0)
             {
-                client.hset("memory_load", 'http://' + cache.get('public_ip'), 1-(freemem/totalmem));
+                client.hget("memory_load", 'http://' + cache.get('public_ip'), function(err, reply){
+                    console.log(reply);
+                    if(reply < 1-(freemem/totalmem) || reply == null)
+                    {
+                        client.hset("memory_load", 'http://' + cache.get('public_ip'), 1-(freemem/totalmem));
+                    }
+                })
             }
         }, 1000);
 
