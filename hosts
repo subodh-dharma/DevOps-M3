@@ -1,6 +1,5 @@
 [production]
-prod1 ansible_host=107.23.244.214
-prod2 ansible_host=107.23.245.180
+prod1 ansible_host=107.23.245.180
 
 [proxy]
 proxy ansible_host=54.209.149.201
