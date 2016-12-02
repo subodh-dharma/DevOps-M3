@@ -33,6 +33,27 @@ setInterval(
                 });
 
                 for (val in object) {
+                    if (aws_instance_cnt > 0) {
+                        if (numRequest <= 300) {
+                            downscaling = true;
+                        } else {
+                            downscaling = false;
+                        }
+                    }
+                }
+
+                if (downscaling) {
+                    sleep = true;
+                    console.log('Downscaling!!');
+                    despawnAWS.terminateAWSInstance(redisip, function() {
+                        console.log('Existing server removed!');
+                        sleep = false;
+                        downscaling = false;
+                    });
+                }
+
+
+                for (val in object) {
                     var numRequest = object[val];
                     console.log(numRequest);
                     //upscaling
@@ -40,35 +61,17 @@ setInterval(
                         upscaling = true;
                         break;
                     }
-
-                    // if (aws_instance_cnt > 0) {
-                    //     if (numRequest <= 300) {
-                    //         downscaling = true;
-                    //     } else {
-                    //         downscaling = false;
-                    //     }
-                    // }
                 }
 
                 if (upscaling) {
                     sleep = true;
+                    console.log('Upscaling..');
                     spawnAWS.createAWSInstance(cache.get('redis_ip'), function() {
                         console.log('New Server Provisioned!');
                         sleep = false;
                         upscaling = false;
                     });
                 }
-
-                // if (downscaling) {
-                //     sleep = true;
-                //     despawnAWS.terminateAWSInstance(redisip, function() {
-                //         console.log('Existing server removed!');
-                //         sleep = false;
-                //         downscaling = false;
-                //     });
-                // }
-
-
                 //downscaling
             });
 
