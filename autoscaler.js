@@ -28,31 +28,33 @@ setInterval(
                 //console.log(object);
                 var aws_instance_cnt = 0;
 
+
+                // downscaling depends if any extra AWS is spawned.
                 client.llen('aws_instanceid', function(err, cnt) {
                     aws_instance_cnt = cnt;
-                });
 
-                for (val in object) {
-                    if (aws_instance_cnt > 0) {
-                        if (numRequest <= 300) {
-                            downscaling = true;
-                        } else {
-                            downscaling = false;
+                    for (val in object) {
+                        if (aws_instance_cnt > 0) {
+                            if (numRequest <= 300) {
+                                downscaling = true;
+                            } else {
+                                downscaling = false;
+                            }
                         }
                     }
-                }
 
-                if (downscaling) {
-                    sleep = true;
-                    console.log('Downscaling!!');
-                    despawnAWS.terminateAWSInstance(redisip, function() {
-                        console.log('Existing server removed!');
-                        sleep = false;
-                        downscaling = false;
-                    });
-                }
+                    if (downscaling) {
+                        sleep = true;
+                        console.log('Downscaling!!');
+                        despawnAWS.terminateAWSInstance(redisip, function() {
+                            console.log('Existing server removed!');
+                            sleep = false;
+                            downscaling = false;
+                        });
+                    }
+                });
 
-
+                // upscaling depending on request load.
                 for (val in object) {
                     var numRequest = object[val];
                     console.log(numRequest);
@@ -72,7 +74,7 @@ setInterval(
                         upscaling = false;
                     });
                 }
-                //downscaling
+
             });
 
             // client.hgetall('memory_load', function(err, object) {
