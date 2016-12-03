@@ -46,7 +46,9 @@ setInterval(
                     if (downscaling) {
                         sleep = true;
                         console.log('Downscaling!!');
-                        despawnAWS.terminateAWSInstance(redisip, function() {
+                        var despawn = despawnAWS.terminateAWSInstance(redisip);
+
+                        despawn.then(function() {
                             console.log('Existing server removed!');
                             sleep = false;
                             downscaling = false;
@@ -68,7 +70,8 @@ setInterval(
                 if (upscaling) {
                     sleep = true;
                     console.log('Upscaling..');
-                    spawnAWS.createAWSInstance(cache.get('redis_ip'), function() {
+                    var spawned = spawnAWS.createAWSInstance(cache.get('redis_ip'));
+                    spawned.then(function() {
                         console.log('New Server Provisioned!');
                         sleep = false;
                         upscaling = false;
