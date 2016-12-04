@@ -53,7 +53,7 @@
     raw: node /home/production/main {{hostvars['redis']['ansible_host']}} clearRedis
 
   - name: Starting Web Server
-    command: forever start  -l /home/production/logs/mainforever.log -o /home/production/logs/mainout.log -e /home/production/logs/mainerr.log /home/production/main.js {{hostvars['redis']['ansible_host']}}
+    command: forever --workingDir /home/production start  -l /home/production/logs/mainforever.log -o /home/production/logs/mainout.log -e /home/production/logs/mainerr.log /home/production/main.js {{hostvars['redis']['ansible_host']}}
   - name: Install nginx
     apt: pkg=nginx state=installed update_cache=yes
 

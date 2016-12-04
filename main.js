@@ -1,3 +1,4 @@
+var trace = require('@risingstack/trace');
 var redis = require('redis')
 var multer = require('multer')
 var express = require('express')
@@ -73,6 +74,7 @@ if (process.argv.slice(2)[1] == 'clearRedis') {
         cache.put('public_ip', ip);
         setInterval(function() {
             client.hset("request_load", 'http://' + cache.get('public_ip'), requestfreq);
+            trace.recordMetric('load/requestLoad', requestfreq)
             requestfreq = 0;
         }, 20000);
 
@@ -82,6 +84,7 @@ if (process.argv.slice(2)[1] == 'clearRedis') {
             if ( totalmem && freemem && totalmem != 0)
             {
                 client.hset("memory_load", 'http://' + cache.get('public_ip'), 1-(freemem/totalmem));
+                trace.recordMetric('load/', 6)
             }
         }, 20000);
 
@@ -113,6 +116,7 @@ if (process.argv.slice(2)[1] == 'clearRedis') {
                 }
                 requestfreq = 0;
             })
+            trace.recordMetric('load/requestLoad', requestfreq);
         }, 1000);
 
         setInterval(function() {
@@ -127,6 +131,7 @@ if (process.argv.slice(2)[1] == 'clearRedis') {
                     }
                 })
             }
+            trace.recordMetric('load/memoryLoad', 1-(freemem/totalmem));
         }, 1000);
 
         client.llen('serving_servers', function(err, serv_count) {
