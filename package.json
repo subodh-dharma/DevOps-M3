@@ -4,6 +4,7 @@
   "description": "Create VM instances on AWS and Digital Ocean and deploy nginx using Ansible",
   "main": "createDOInstance.js",
   "dependencies": {
+    "@risingstack/trace": "^2.36.0",
     "external-ip": "^0.2.4",
     "http": "0.0.0",
     "http-proxy": "^1.15.2",
