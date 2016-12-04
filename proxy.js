@@ -1,3 +1,4 @@
+var trace = require('@risingstack/trace');
 var redis = require('redis')
 var httpProxy = require('http-proxy')
 var http = require('http')
