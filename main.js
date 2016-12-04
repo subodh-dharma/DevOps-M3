@@ -107,10 +107,7 @@ if (process.argv.slice(2)[1] == 'clearRedis') {
         }
         cache.put('public_ip', ip);
 
-        var counter = 0;
-        var max_requests = 0;
         setInterval(function() {
-            counter ++;
             console.log("Number of requests per second: " + requestfreq);
             client.hget("request_load", 'http://' + cache.get('public_ip'), function(err, reply){
                 if(reply < requestfreq || reply == null)
@@ -119,22 +116,10 @@ if (process.argv.slice(2)[1] == 'clearRedis') {
                 }
                 requestfreq = 0;
             })
-            if(requestfreq > max_requests)
-            {
-                max_requests = requestfreq;
-            }
-            if(counter == 20)
-            {
-                counter = 0;
-                trace.recordMetric('load/requestLoad', max_requests);
-                max_requests = 0;
-            }
+            trace.recordMetric('load/requestLoad', requestfreq);
         }, 1000);
 
-        var counter2 = 0;
-        var max_memory = 0;
         setInterval(function() {
-            counter2 ++;
             var freemem = os.freemem();
             var totalmem = os.totalmem();
             if ( totalmem && freemem && totalmem != 0)
@@ -146,16 +131,7 @@ if (process.argv.slice(2)[1] == 'clearRedis') {
                     }
                 })
             }
-            if (1 - (freemem/totalmem) > max_memory)
-            {
-                max_memory = 1 - (freemem/totalmem);
-            }
-            if (counter2 == 20)
-            {
-                counter2 = 0;
-                trace.recordMetric('load/memoryLoad', max_memory);
-                max_memory = 0;
-            }
+            trace.recordMetric('load/memoryLoad', 1-(freemem/totalmem));
         }, 1000);
 
         client.llen('serving_servers', function(err, serv_count) {
