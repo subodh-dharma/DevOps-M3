@@ -27,15 +27,14 @@ setInterval(
             client.hgetall('request_load', function(err, object) {
                 //console.log(object);
                 var aws_instance_cnt = 0;
-
-
                 // downscaling depends if any extra AWS is spawned.
                 client.llen('aws_instanceid', function(err, cnt) {
                     aws_instance_cnt = cnt;
 
                     for (val in object) {
+                        var numRequest = object[val];
                         if (aws_instance_cnt > 0) {
-                            if (numRequest <= 300) {
+                            if (numRequest <= 100) {
                                 downscaling = true;
                             } else {
                                 downscaling = false;
@@ -45,7 +44,7 @@ setInterval(
 
                     if (downscaling) {
                         sleep = true;
-                        console.log('Downscaling!!');
+                        console.log('Downscaling as request load is balanced!!');
                         var despawn = despawnAWS.terminateAWSInstance(redisip);
 
                         despawn.then(function() {
@@ -59,7 +58,7 @@ setInterval(
                 // upscaling depending on request load.
                 for (val in object) {
                     var numRequest = object[val];
-                    console.log(numRequest);
+                    //console.log(numRequest);
                     //upscaling
                     if (numRequest >= 300) {
                         upscaling = true;
@@ -69,7 +68,7 @@ setInterval(
 
                 if (upscaling) {
                     sleep = true;
-                    console.log('Upscaling..');
+                    console.log('Upscaling Because of Request load..');
                     var spawned = spawnAWS.createAWSInstance(cache.get('redis_ip'));
                     spawned.then(function() {
                         console.log('New Server Provisioned!');
@@ -80,49 +79,58 @@ setInterval(
 
             });
 
-            // client.hgetall('memory_load', function(err, object) {
-            //     //console.log(object);
-            //     var aws_instance_cnt = 0;
+            client.hgetall('memory_load', function(err, object) {
+                var aws_instance_cnt = 0;
+                // downscaling depends if any extra AWS is spawned.
+                client.llen('aws_instanceid', function(err, cnt) {
+                    aws_instance_cnt = cnt;
 
-            //     client.llen('aws_instanceid', function(err, cnt) {
-            //         aws_instance_cnt = cnt;
-            //     });
+                    for (val in object) {
+                        var requestLoad = object[val];
+                        if (aws_instance_cnt > 0) {
+                            if (requestLoad <= 0.30) {
+                                downscaling = true;
+                            } else {
+                                downscaling = false;
+                            }
+                        }
+                    }
 
-            //     for (val in object) {
-            //         console.log(object[val]);
-            //         //upscaling
-            //         if (object[val] >= 0.80) {
-            //             upscaling = true;
-            //             break;
-            //         }
+                    if (downscaling) {
+                        sleep = true;
+                        console.log('Downscaling because of optimum memory usage');
+                        var despawn = despawnAWS.terminateAWSInstance(redisip);
 
-            //         if (aws_instance_cnt > 0) {
-            //             if (object[val] <= 0.30) {
-            //                 downscaling = true;
-            //             } else {
-            //                 downscaling = false;
-            //             }
-            //         }
-            //     }
+                        despawn.then(function() {
+                            console.log('Existing server removed!');
+                            sleep = false;
+                            downscaling = false;
+                        });
+                    }
+                });
 
-            //     if (upscaling) {
-            //         sleep = true;
-            //         spawnAWS.createAWSInstance(redisip, function() {
-            //             console.log('New Server Provisioned!');
-            //             sleep = false;
-            //             upscaling = false;
-            //         });
-            //     }
+                // upscaling depending on request load.
+                for (val in object) {
+                    var requestLoad = object[val];
+                    //console.log(numRequest);
+                    //upscaling
+                    if (requestLoad >= 0.90) {
+                        upscaling = true;
+                        break;
+                    }
+                }
 
-            //     if (downscaling) {
-            //         sleep = true;
-            //         despawnAWS.terminateAWSInstance(redisip, function() {
-            //             console.log('Existing server removed!');
-            //             sleep = false;
-            //             downscaling = false;
-            //         });
-            //     }
-            // });
+                if (upscaling) {
+                    sleep = true;
+                    console.log('Upscaling because of high memory load');
+                    var spawned = spawnAWS.createAWSInstance(cache.get('redis_ip'));
+                    spawned.then(function() {
+                        console.log('New Server Provisioned!');
+                        sleep = false;
+                        upscaling = false;
+                    });
+                }
+            });
         } else {
 
             console.log('Rescaling initiated');
