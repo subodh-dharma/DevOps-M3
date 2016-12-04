@@ -35,7 +35,7 @@ monitor.on('freemem', function(event) {
 
 //change config while monitor is running
 monitor.config({
-    freemem: 0.7 // alarm when 80% or less free memory available
+    freemem: 0.9 // alarm when 80% or less free memory available
 });
 
 // // check whether monitor is running or not
