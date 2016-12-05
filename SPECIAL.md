@@ -30,4 +30,16 @@ The system has two monitoring services deployed. Both work on Application server
 
 ###### _Auto Scaling_
 
-The 
+The system has an autoscaler which runs on the `/redis` branch. The auto-scaling is enabled based on the metrics received from monitoring services. The autoscaler reads the metrics saved by application server and makes a decision on upscaling or downscaling the architecture components. Currently the system supports scaling of Application Server only. For upscaling it will instantiate a new AWS server to load balancing activities.
+
+###### _Test URL Fuzzer_
+
+The `urlfuzzer.js` has the capability to generate a .json file which contains the parameters for loadtest apis. The `urlfuzzer.js` when executed will generate new file i.e. `generatedTests.json`, which will contain urls for load testing.
+
+###### _Chaos Monkey: HTTP Request Loader Monkey_
+
+The main aim of the chaos monkey is to create HTTP requests and send in bulk, it will open concurrent connections, send HTTP requests for existing urls and with different requests per second. It will also create requests with different header options.
+
+Effects of chaos monkey can be seen mainly on Proxy Server and Application Server. Since large number of requests are received the proxy server, because of limited memory and CPU resources in unable to handle them. The chaos monkey doesn't waits for the requests response, as a result many connection at proxy are left opened and hence gets crashed as a result of socket exhaustion. This test the infrastructure resilience to keep the proxy from failing.
+
+Another effect that chaos monkey causes is the request load on application servers. The number of request that are received by the application server may vary highly. Thus this tests the auto-scaling feature where the application servers must dynamically upscale and downscale based on number of requests the chaos monkey is generating.
