@@ -8,6 +8,8 @@
 
 ### Special Milestone
 
+##### Screencast [Link](https://youtu.be/euTQy2jJXNo) 
+
 #### Architecture
 
 The system consists of following components:
@@ -64,5 +66,5 @@ Or even check metrics.
 
 We use these metrics to take scaling decisions.
 
-**Link:** 
+**Link:**
 [Trace](https://trace.risingstack.com/)
