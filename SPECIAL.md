@@ -63,3 +63,6 @@ Or even check metrics.
 ![Metrics2](./img/metrics2_trace.png)
 
 We use these metrics to take scaling decisions.
+
+**Link:** 
+[Trace](https://trace.risingstack.com/)
