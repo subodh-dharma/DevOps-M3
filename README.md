@@ -1,62 +1,68 @@
-# Milestone 3 - DevOps - Deployment
+# CSC 791 - DevOps Project - Special Milestone
 
 ## Team
 
 * Aniket Patel (apatel10)
 * Subodh Dharmadhikari (ssdharma)
-* Matrika Rohatgi (mrohatgi2)
+* Matrika Rohatgi (mrohatgi)
 
-#### Jenkins Configuration [files](./config)
+### Special Milestone
 
-#### Screencast [Link](https://youtu.be/wNY121P74cI?list=PLwmjVRRFEyJDraYS1eGJW9PHWPzdCaIVD)
+#### Architecture
 
+The system consists of following components:
+* Build Server - Jenkins
+* Redis Server
+* Proxy Server
+* Application Server
 
-## Infrastructure Setup
+The deployment of each server is controlled using git branches, Jenkins and Ansible playbooks. The repository contains branches namely `/master`, `/redis` and `/proxy` to deploy any configurations or application logic to Application Server, Redis Server and Proxy Server respectively. The build and deployment is performed at each push to respective branch.
 
-<br>
-![Infrastructure Setup](./img/infrastructure.PNG)
+This strategy helps in maintaining a continuous build and deployment pipeline.
 
-**Legend**
+#### Features
 
-_Blue Connections_ : Deployment Paths
-<br>_Red Connections_ : Production Communication Paths
+###### _Monitoring Services_
 
-## Infrastructure Components
+The system has two monitoring services deployed. Both work on Application servers.
+1. Request Monitor - This monitor calculates the number of request received at each application server individually. The count is updated continuously to Redis server in a hash table with the name same as that of the IP address of the app server.
+2. Memory Monitor - This monitor uses `os-monitor` npm package to check the memory usage of the system periodically. This service also updates the redis server with memory_load hash table.
 
-* **Build Server**
+###### _Auto Scaling_
 
-  When a developer commits the code to the repository, build server fetches the recent commit and checks the build status of the repository.
+The system has an autoscaler which runs on the `/redis` branch. The auto-scaling is enabled based on the metrics received from monitoring services. The autoscaler reads the metrics saved by application server and makes a decision on upscaling or downscaling the architecture components. Currently the system supports scaling of Application Server only. For upscaling it will instantiate a new AWS server to load balancing activities.
 
-  We have used Jenkins as the build server and with the Github Webhooks, the recent commit of the data is fetched and build activities are performed on them.
+###### _Test URL Fuzzer_
 
-  Based on the branch on which the push is made, Jenkins performs respective activities and deploys on respective hosts.
+The `urlfuzzer.js` has the capability to generate a .json file which contains the parameters for loadtest apis. The `urlfuzzer.js` when executed will generate new file i.e. `generatedTests.json`, which will contain urls for load testing.
 
-  Following are four main build activities based on branches that are deployed:
-  * Production - `/master`, The application hosted
-  * Proxy Server - `/proxy`, The proxy server settings and port forwarding logic
-  * Redis Store - `/redis`, The global redis store available to production and proxy servers.
-  * Canary - `/canary`, The application with any canary/beta tests.
+The main aim of the chaos monkey is to create HTTP requests and send in bulk, it will open concurrent connections, send HTTP requests for existing urls and with different requests per second. It will also create requests with different header options.
 
+Effects of chaos monkey can be seen mainly on Proxy Server and Application Server. Since large number of requests are received the proxy server, because of limited memory and CPU resources in unable to handle them. The chaos monkey doesn't waits for the requests response, as a result many connection at proxy are left opened and hence gets crashed as a result of socket exhaustion. This test the infrastructure resilience to keep the proxy from failing.
 
-* **Proxy Server**
+Another effect that chaos monkey causes is the request load on application servers. The number of request that are received by the application server may vary highly. Thus this tests the auto-scaling feature where the application servers must dynamically upscale and downscale based on number of requests the chaos monkey is generating.
 
-  Hosts the Nginx webserver and acts as a proxy server. Proxy server connects to the Production servers. Internally, Proxy Server will distribute requests to the available production and canary servers based on their availability.
-
-  It refers to the Redis Store to check the currently used servers and available servers. In case of auto-scaling the redis's server queues are managed to server the newly allocated servers.
-
-* **Redis Store**
-
-  A global Redis Store is hosted which helps to control the features, active servers to be used by proxy. The Redis will store following:
-
-  * _Available Servers_
-  * _Currently Serving Servers_
-  * _Canary Servers_
+#### Trace Profiler
+Trace is a graphical viewer for execution logs for tracing log information in the code. It helps in debugging the application as well as profile it's performance. Trace helps find and fix issues using profilers, distributed tracing, error detection as well as custom metrics.
 
 
-* **Production Servers**
+Here, we can visualize our whole infrastructure. This helps in getting health of all the services and even hints if they are getting slower.
 
-  It hosts the application logic. It hosts ExpressJS server to serve the application logic. Any global variables are stored in the Redis Store so that all production servers can access the common data.
 
-* **Canary Server**
+![Infrastructure](./img/infra_trace.png)
 
-  Hosts the application logic to be tested viz. new feature or beta version of the application logic. The user can expected different behavior of application when the request hits the Canary Server.
+
+Trace errors and their origin.
+
+![Errors](./img/error_trace.png)
+
+
+Or even check metrics.
+
+![Metrics](./img/metrics1_trace.png)
+![Metrics2](./img/metrics2_trace.png)
+
+We use these metrics to take scaling decisions.
+
+**Link:** 
+[Trace](https://trace.risingstack.com/)
